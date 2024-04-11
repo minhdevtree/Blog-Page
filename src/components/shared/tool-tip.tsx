@@ -11,7 +11,7 @@ export function BasicTooltip({ title }: { title: string }) {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger>
-                    <div className="line-clamp-1">{title}</div>
+                    <p className="line-clamp-1 text-left">{title}</p>
                 </TooltipTrigger>
                 <TooltipContent>
                     <p>{title}</p>

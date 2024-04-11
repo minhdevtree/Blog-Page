@@ -19,6 +19,7 @@ import DistanceToNowToolTip from '@/components/shared/distance-to-now-tooltip';
 import CategoryBadge from '@/components/shared/category-badge';
 import TagBadge from '@/components/shared/tag-badge';
 import PublishedBadge from '@/components/shared/published-badge';
+import { BasicTooltip } from '@/components/shared/tool-tip';
 
 export function NewPostCard({ post }: { post: Post }) {
     return (
@@ -67,7 +68,7 @@ export function NewPostCard({ post }: { post: Post }) {
                             </div>
                             <div className="mb-2 mt-5">
                                 <h1 className="text-xl font-bold line-clamp-1">
-                                    {post.title}
+                                    <BasicTooltip title={post.title} />
                                 </h1>
                             </div>
                             <div className="text-sm text-muted-foreground line-clamp-3 md:line-clamp-6 md:max-w-[500px]">
