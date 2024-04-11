@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id          String        @id @default(cuid())
+  fullName    String
+  username    String        @unique
+  email       String        @unique
+  phoneNumber String?
+  password    String?
+  img         String        @default("/avatar/noavatar.png")
+  intro       String?
+  status      StatusType    @default(ACTIVE)
+  role        RoleType      @default(USER)
+  loginType   LoginType     @default(LOCAL)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  lastLogin   DateTime?
+  bookmarks   BookMark[]
+  likes       Like[]
+  posts       Post[]
+  comments    PostComment[]
+}
+
+model Post {
+  id          String        @id @default(cuid())
+  parentId    String?
+  title       String
+  summary     String?
+  content     String?
+  published   PublishedType @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  publishedAt DateTime?
+  slug        String        @unique
+  authorId    String?
+  BookMarks   BookMark[]
+  likes       Like[]
+  author      User?         @relation(fields: [authorId], references: [id])
+  parent      Post?         @relation("PostToPost", fields: [parentId], references: [id])
+  children    Post[]        @relation("PostToPost")
+  comments    PostComment[]
+  metas       PostMeta[]
+  categories  Category[]    @relation("CategoryToPost")
+  tags        Tag[]         @relation("PostToTag")
+}
+
+model PostMeta {
+  id     String  @id @default(cuid())
+  postId String
+  key    KeyType @default(IMG)
+  value  String
+  post   Post    @relation(fields: [postId], references: [id])
+}
+
+model PostComment {
+  id        String        @id @default(cuid())
+  postId    String
+  parentId  String?
+  userId    String?
+  title     String?
+  content   String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  status    StatusType    @default(ACTIVE)
+  parent    PostComment?  @relation("PostCommentToPostComment", fields: [parentId], references: [id])
+  children  PostComment[] @relation("PostCommentToPostComment")
+  post      Post          @relation(fields: [postId], references: [id])
+  user      User?         @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id       String     @id @default(cuid())
+  parentId String?
+  title    String
+  content  String?
+  slug     String     @unique
+  parent   Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryToCategory")
+  posts    Post[]     @relation("CategoryToPost")
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  title String
+  slug  String @unique
+  posts Post[] @relation("PostToTag")
+}
+
+model BookMark {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum RoleType {
+  USER
+  ADMIN
+  WRITER
+}
+
+enum LoginType {
+  LOCAL
+  GOOGLE
+  GITHUB
+}
+
+enum StatusType {
+  ACTIVE
+  BANNED
+  DELETED
+}
+
+enum PublishedType {
+  DRAFT
+  PUBLISHED_ALL
+  PUBLISHED_SUBSCRIBERS
+  PRIVATE
+  DELETED
+}
+
+enum KeyType {
+  IMG
+  CODE
+  LINK
+}
