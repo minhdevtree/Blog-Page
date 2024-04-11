@@ -27,10 +27,6 @@ export const login = async (formData: z.infer<typeof loginFormSchema>) => {
             password,
         });
     } catch (error: any) {
-        // if (err.message.includes('CredentialsSignin')) {
-        //     return { error: 'Tài khoản hoặc mật khẩu không chính xác' };
-        // }
-        // throw err;
         if (error instanceof AuthError) {
             switch (error.type) {
                 case 'CredentialsSignin':
