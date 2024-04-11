@@ -75,6 +75,27 @@ export type TopCreator = {
     fullName: string;
 };
 
+export type PageMeta = {
+    totalPages: number;
+    page: number;
+    totalElements: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+};
+
+export type BreadItem = {
+    title: string;
+    url: string;
+    active: boolean;
+};
+
+export type SearchPostParams = {
+    sort?: string;
+    page?: number;
+    pageSize?: number;
+};
+
 export enum RoleType {
     ADMIN,
     USER,

@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { CategoryListMobile } from './category-list-mobile';
 import { logout } from '@/lib/action';
 import { Category } from '@/lib/define';
+import { ModeToggle } from '../mode-toggle';
 
 type PageProps = {
     label: string;
@@ -77,6 +78,10 @@ export function SideBarMobile({
                             </SheetDescription>
                         </SheetHeader>
                     )}
+                    <div className="flex justify-center my-2">
+                        <ModeToggle />
+                    </div>
+
                     <div className="flex flex-col justify-center">
                         {pages.map(page => (
                             <Link

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { ApiRequestInfo } from '@/lib/define';
+import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import getClientIp from 'get-client-ip';
 
 const currentTime = new Date().toISOString();
@@ -12,31 +12,25 @@ const apiRequestInfo = {
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
+const pageMeta = {
+    totalPages: 0,
+    page: 0,
+    totalElements: 0,
+    pageSize: 5,
+    hasNext: false,
+    hasPrev: false,
+} as PageMeta;
+
 export const GET = async (request: NextRequest, response: NextResponse) => {
     try {
         // Get searchParams from request
         const limit = request.nextUrl.searchParams.get('limit');
         const sort = request.nextUrl.searchParams.get('sort');
-        const published = request.nextUrl.searchParams.get('published');
-
-        // const session = await auth();
-        // if (!session) {
-        //     return NextResponse.json(
-        //         {
-        //             apiRequestInfo,
-        //             data: {
-        //                 error: 'Unauthorize',
-        //             },
-        //         },
-        //         { status: 400 }
-        //     );
-        // }
+        const page = request.nextUrl.searchParams.get('page');
+        const pageSize = request.nextUrl.searchParams.get('pageSize');
 
         // Validate searchParams
         try {
-            if (limit) {
-                return;
-            }
             const parsedLimit = parseInt(limit || '');
             if (parsedLimit < 1 || parsedLimit >= 10) {
                 return NextResponse.json(
@@ -69,6 +63,64 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
                 { status: 400 }
             );
         }
+        try {
+            const parsedPage = parseInt(page || '');
+            if (parsedPage < 1) {
+                return NextResponse.json(
+                    {
+                        apiRequestInfo,
+                        data: {
+                            error: 'Search param page must be greater than 0',
+                        },
+                    },
+                    { status: 400 }
+                );
+            }
+        } catch {
+            return NextResponse.json(
+                {
+                    apiRequestInfo,
+                    data: { error: 'Search param page must be number' },
+                },
+                { status: 400 }
+            );
+        }
+        // Validate pageSize parameter
+        try {
+            const parsedPageSize = parseInt(pageSize || '');
+            if (parsedPageSize < 1 || parsedPageSize >= 10) {
+                return NextResponse.json(
+                    {
+                        apiRequestInfo,
+                        data: {
+                            error: 'Search param pageSize must be greater than 0 and smaller than 10',
+                        },
+                    },
+                    { status: 400 }
+                );
+            }
+        } catch {
+            return NextResponse.json(
+                {
+                    apiRequestInfo,
+                    data: { error: 'Search param pageSize must be number' },
+                },
+                { status: 400 }
+            );
+        }
+
+        // Get all posts from database
+
+        pageMeta.totalElements = await prisma.post.count();
+        pageMeta.pageSize = pageSize ? parseInt(pageSize) : pageMeta.pageSize;
+        pageMeta.totalPages = Math.ceil(
+            pageMeta.totalElements / pageMeta.pageSize
+        );
+        pageMeta.hasNext = pageMeta.page < pageMeta.totalPages;
+        pageMeta.hasPrev = pageMeta.page > 1;
+        pageMeta.page = parseInt(page || '1');
+
+        const skip = (pageMeta.page - 1) * pageMeta.pageSize;
 
         // Get client IP
         const ip = getClientIp(request);
@@ -76,9 +128,10 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
 
         // Get all posts from database
         const posts = await prisma.post.findMany({
+            skip,
             // where: { published: PublishedType.PUBLISHED_ALL },
             orderBy: { publishedAt: sort === 'asc' ? 'asc' : 'desc' },
-            take: limit ? parseInt(limit) : 10,
+            take: pageMeta.pageSize,
             select: {
                 id: true,
                 title: true,
@@ -119,7 +172,7 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
             },
         });
 
-        return NextResponse.json({ apiRequestInfo, data: posts });
+        return NextResponse.json({ apiRequestInfo, data: { pageMeta, posts } });
     } catch (err) {
         return NextResponse.json(
             { apiRequestInfo, data: { error: 'Fail to fetch posts' } },

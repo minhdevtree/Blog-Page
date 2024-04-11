@@ -1,9 +1,11 @@
 import { getPosts } from '@/lib/data';
 import { PostCard } from './post-card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Post } from '@/lib/define';
 
 export default async function AllPost() {
-    const posts = await getPosts(9, 'published_all', 'desc');
+    const { posts } = await getPosts({ page: 1, pageSize: 9 });
     return (
         <>
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-2 my-2">
@@ -12,7 +14,9 @@ export default async function AllPost() {
                 ))}
             </div>
             <div className="flex justify-center my-5">
-                <Button variant="default">Xem thêm</Button>
+                <Link href="/posts">
+                    <Button variant="default">Xem tất cả</Button>
+                </Link>
             </div>
         </>
     );

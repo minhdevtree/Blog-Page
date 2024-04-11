@@ -1,18 +1,40 @@
 import axios from 'axios';
-import { Category, Post, Tag, TopCreator } from './define';
+import {
+    Category,
+    PageMeta,
+    Post,
+    SearchPostParams,
+    Tag,
+    TopCreator,
+} from './define';
 
 axios.defaults.baseURL = process.env.API_URL;
 
-export const getPosts = async (
-    limit: number,
-    published: string,
-    sort: string
-) => {
+const pageMetaDefault = {
+    totalPages: 0,
+    page: 0,
+    pageSize: 0,
+    hasNext: false,
+    hasPrev: false,
+} as PageMeta;
+
+export const getPosts = async (searchParams: SearchPostParams) => {
     try {
-        return await axios.get(`/posts`).then(res => res.data.data as Post[]);
+        const { posts, pageMeta } = await axios
+            .get('/posts', { params: searchParams })
+            .then(res => {
+                return {
+                    posts: res.data.data.posts as Post[],
+                    pageMeta: res.data.data.pageMeta as PageMeta,
+                };
+            });
+        return { posts, pageMeta };
     } catch (error) {
         console.error(error);
-        return [] as Post[];
+        return {
+            posts: [] as Post[],
+            pageMeta: pageMetaDefault as PageMeta,
+        };
     }
 };
 
