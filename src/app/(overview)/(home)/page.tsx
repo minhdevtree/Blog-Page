@@ -9,18 +9,8 @@ import TagSectionLoading from '@/components/overview/home/loading/tag-loading/ta
 import NewPostList from '@/components/overview/home/new-post-list/new-post-list';
 import PopularPostList from '@/components/overview/home/popular-post/popular-post-list';
 import TagSection from '@/components/overview/home/tag/tag';
-import ListPagination from '@/components/shared/list-pagination';
 import { auth } from '@/lib/auth';
 import { Suspense } from 'react';
-
-const meta = {
-    totalPages: 6,
-    page: 1,
-    totalElements: 18,
-    pageSize: 3,
-    hasNext: true,
-    hasPrev: false,
-};
 
 export default async function Home() {
     const session = await auth();

@@ -16,7 +16,7 @@ export function NewPostListLoading() {
                 <CarouselItem>
                     <div className="p-1">
                         <Card className="border-0">
-                            <CardContent className="p-0 flex flex-col justify-center md:justify-between md:flex-row gap-8">
+                            <CardContent className="p-0 flex flex-col justify-center md:justify-between lg:flex-row sm:gap-8">
                                 {/* Begin Image */}
                                 <div className="w-full sm:w-full md:w-[400px] lg:w-[600px] xl:w-[700px]">
                                     <Skeleton className="h-full aspect-video" />
@@ -27,7 +27,7 @@ export function NewPostListLoading() {
                                     <div className="">
                                         <div>
                                             {/* Begin Category */}
-                                            <div className="flex gap-2">
+                                            <div className="sm:flex gap-2 hidden">
                                                 <Skeleton className="h-[1.25rem] w-[120px] rounded-lg" />
                                             </div>
                                             {/* End Category */}
@@ -69,7 +69,7 @@ export function NewPostListLoading() {
                                             </div>
                                             {/* Begin publishedAt */}
                                             <div className="text-sm text-muted-foreground ">
-                                                <Skeleton className="h-[0.875rem] w-[200px]" />
+                                                <Skeleton className="h-[0.875rem] w-[120px]" />
                                             </div>
                                             {/* End publishedAt */}
                                         </div>

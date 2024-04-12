@@ -30,7 +30,6 @@ export const getPosts = async (searchParams: SearchPostParams) => {
             });
         return { posts, pageMeta };
     } catch (error) {
-        console.error(error);
         return {
             posts: [] as Post[],
             pageMeta: pageMetaDefault as PageMeta,
@@ -46,6 +45,50 @@ export const getPopularPosts = async () => {
     } catch (error) {
         console.error(error);
         return [] as Post[];
+    }
+};
+
+export const getPostsByCategory = async (
+    slug: string,
+    searchParams: SearchPostParams
+) => {
+    try {
+        const { posts, pageMeta } = await axios
+            .get(`/posts/category/${slug}`, { params: searchParams })
+            .then(res => {
+                return {
+                    posts: res.data.data.posts as Post[],
+                    pageMeta: res.data.data.pageMeta as PageMeta,
+                };
+            });
+        return { posts, pageMeta };
+    } catch (error) {
+        return {
+            posts: [] as Post[],
+            pageMeta: pageMetaDefault as PageMeta,
+        };
+    }
+};
+
+export const getPostsByTag = async (
+    slug: string,
+    searchParams: SearchPostParams
+) => {
+    try {
+        const { posts, pageMeta } = await axios
+            .get(`/posts/tag/${slug}`, { params: searchParams })
+            .then(res => {
+                return {
+                    posts: res.data.data.posts as Post[],
+                    pageMeta: res.data.data.pageMeta as PageMeta,
+                };
+            });
+        return { posts, pageMeta };
+    } catch (error) {
+        return {
+            posts: [] as Post[],
+            pageMeta: pageMetaDefault as PageMeta,
+        };
     }
 };
 

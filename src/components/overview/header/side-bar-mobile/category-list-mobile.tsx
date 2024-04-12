@@ -18,7 +18,7 @@ export function CategoryListMobile({ categories }: { categories: Category[] }) {
                 <AccordionItem value={category.slug} key={category.slug}>
                     <AccordionTrigger>{category.title}</AccordionTrigger>
                     <AccordionContent>
-                        <Link href={`/category/${category.slug}/`}>
+                        <Link href={`/posts/category/${category.slug}/`}>
                             <AccordionContent key={category.slug + 'parent'}>
                                 {category.title}
                             </AccordionContent>
@@ -27,7 +27,7 @@ export function CategoryListMobile({ categories }: { categories: Category[] }) {
                             if (subcategory.parentId === category.id) {
                                 return (
                                     <Link
-                                        href={`/category/${category.slug}/${subcategory.slug}`}
+                                        href={`/posts/category/${subcategory.slug}`}
                                         key={subcategory.slug}
                                     >
                                         <AccordionContent>

@@ -34,7 +34,7 @@ export default function CategoryList({
                                     <NavigationMenuLink asChild>
                                         <Link
                                             className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                                            href={`/category/${category.slug}`}
+                                            href={`/posts/category/${category.slug}`}
                                         >
                                             <Icons.cloud className="h-6 w-6" />
                                             <div className="mb-2 mt-4 text-lg font-medium">
@@ -50,7 +50,7 @@ export default function CategoryList({
                                     (subcategory: Subcategory) => (
                                         <ListItem
                                             key={subcategory.slug}
-                                            href={`/category/${category.slug}/${subcategory.slug}`}
+                                            href={`/posts/category/${subcategory.slug}`}
                                             title={subcategory.title}
                                         >
                                             {subcategory.content}

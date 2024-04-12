@@ -2,9 +2,13 @@ import type { Metadata } from 'next';
 
 import HeaderSite from '@/components/overview/header/header-site';
 import FooterSite from '@/components/overview/footer/footer-site';
+import { siteConfig } from '@/config/site';
 
 export const metadata: Metadata = {
-    title: 'Trang chủ',
+    title: {
+        default: `Trang chủ | ${siteConfig.name}`,
+        template: `%s | ${siteConfig.name}`,
+    },
     description: 'Trang chủ của website',
 };
 

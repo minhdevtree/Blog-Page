@@ -35,7 +35,11 @@ export function TagCard({ tag, value }: { tag: Tag; value: number }) {
         }
     };
     return (
-        <Link href={`/tag/${tag.slug}`} passHref className="whitespace-nowrap">
+        <Link
+            href={`/posts/tag/${tag.slug}`}
+            passHref
+            className="whitespace-nowrap"
+        >
             <Card
                 className={cn('p-2 cursor-pointer', getBackgroundColour(value))}
             >

@@ -2,7 +2,13 @@ import PostsLoading from '@/components/overview/posts/loading/posts-loading';
 import Posts from '@/components/overview/posts/posts';
 import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
 import { BreadItem, SearchPostParams } from '@/lib/define';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+    title: 'Tất cả bài viết',
+    description: 'Toàn bộ bài viết được hiển thị tại đây',
+};
 
 const breadItems = [
     {

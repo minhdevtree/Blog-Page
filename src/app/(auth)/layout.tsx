@@ -5,10 +5,14 @@ import LogoSite from '@/components/overview/logo-site';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
+import { siteConfig } from '@/config/site';
 
 export const metadata: Metadata = {
-    title: 'Authentication',
-    description: 'Authentication forms built using the components.',
+    title: {
+        default: `Authentication | ${siteConfig.name}`,
+        template: `%s | ${siteConfig.name}`,
+    },
+    description: 'Thực hiện xác thực người dùng tại đây',
 };
 
 export default function AuthLayout({
