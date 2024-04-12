@@ -13,14 +13,6 @@ const fontSans = FontSans({
     variable: '--font-sans',
 });
 
-export const metadata: Metadata = {
-    title: {
-        default: `Trang chủ | ${siteConfig.name}`,
-        template: `%s | ${siteConfig.name}`,
-    },
-    description: 'Trang chủ của website',
-};
-
 export const viewport: Viewport = {
     themeColor: [
         { media: '(prefers-color-scheme: light)', color: 'white' },
