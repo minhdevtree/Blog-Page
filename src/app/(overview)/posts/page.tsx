@@ -22,7 +22,7 @@ export default function PostsPage({
             <Suspense
                 key={
                     searchParams.page ||
-                    '' + searchParams.sort + searchParams.pageSize
+                    '1' + searchParams.sort + searchParams.pageSize
                 }
                 fallback={<PostsLoading />}
             >

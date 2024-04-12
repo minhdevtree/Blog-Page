@@ -12,16 +12,15 @@ const apiRequestInfo = {
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
-const pageMeta = {
-    totalPages: 0,
-    page: 0,
-    totalElements: 0,
-    pageSize: 5,
-    hasNext: false,
-    hasPrev: false,
-} as PageMeta;
-
 export const GET = async (request: NextRequest, response: NextResponse) => {
+    const pageMeta = {
+        totalPages: 0,
+        page: 0,
+        totalElements: 0,
+        pageSize: 5,
+        hasNext: false,
+        hasPrev: false,
+    } as PageMeta;
     try {
         // Get searchParams from request
         const limit = request.nextUrl.searchParams.get('limit');
@@ -116,9 +115,9 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
         pageMeta.totalPages = Math.ceil(
             pageMeta.totalElements / pageMeta.pageSize
         );
+        pageMeta.page = parseInt(page || '1');
         pageMeta.hasNext = pageMeta.page < pageMeta.totalPages;
         pageMeta.hasPrev = pageMeta.page > 1;
-        pageMeta.page = parseInt(page || '1');
 
         const skip = (pageMeta.page - 1) * pageMeta.pageSize;
 
