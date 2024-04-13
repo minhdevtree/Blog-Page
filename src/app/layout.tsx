@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { auth } from '@/lib/auth';
 import { Suspense } from 'react';
+import FullPageLoadingOverlay from '@/components/shared/full-page-loading-overlay';
 
 const fontSans = FontSans({
     subsets: ['latin'],
@@ -35,13 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     fontSans.variable
                 )}
             >
-                <Suspense
-                    fallback={
-                        <div className="text-center h-screen flex flex-col justify-center text-xl">
-                            Đang tải...
-                        </div>
-                    }
-                >
+                <Suspense fallback={<FullPageLoadingOverlay />}>
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="system"
