@@ -39,18 +39,15 @@ const Error = ({
                     </div>
                     <div className="flex justify-center gap-3">
                         <Link href="">
-                            <Button
-                                onClick={
-                                    // Attempt to recover by trying to re-render the segment
-                                    () => reset()
-                                }
-                            >
-                                Thử lại
-                            </Button>
+                            <Button onClick={() => reset()}>Thử lại</Button>
                         </Link>
-                        <Link href="/">
-                            <Button variant="outline">Trang chủ</Button>
-                        </Link>
+
+                        <Button
+                            variant="outline"
+                            onClick={() => (window.location.href = '/')}
+                        >
+                            Trang chủ
+                        </Button>
                     </div>
                 </div>
             </div>

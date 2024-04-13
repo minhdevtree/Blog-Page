@@ -19,7 +19,13 @@ export default function RegisterPage() {
                 </h1>
             </div>
             <div className="grid gap-6">
-                <Suspense>
+                <Suspense
+                    fallback={
+                        <div className="text-center">
+                            Đang tải form đăng ký...
+                        </div>
+                    }
+                >
                     <UserAuthRegisterForm />
                 </Suspense>
                 {/* <OtherLoginMethod /> */}

@@ -7,6 +7,7 @@ import { siteConfig } from '@/config/site';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { auth } from '@/lib/auth';
+import { Suspense } from 'react';
 
 const fontSans = FontSans({
     subsets: ['latin'],
@@ -24,7 +25,7 @@ interface RootLayoutProps {
     children: React.ReactNode;
 }
 
-export default async function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="vi" suppressHydrationWarning>
             <Toaster />
@@ -34,18 +35,26 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                     fontSans.variable
                 )}
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <div vaul-drawer-wrapper="">
-                        <div className="relative flex min-h-screen flex-col bg-background">
-                            {children}
+                <Suspense
+                    fallback={
+                        <div className="text-center h-screen flex flex-col justify-center text-xl">
+                            Đang tải...
                         </div>
-                    </div>
-                </ThemeProvider>
+                    }
+                >
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <div vaul-drawer-wrapper="">
+                            <div className="relative flex min-h-screen flex-col bg-background">
+                                {children}
+                            </div>
+                        </div>
+                    </ThemeProvider>
+                </Suspense>
             </body>
         </html>
     );

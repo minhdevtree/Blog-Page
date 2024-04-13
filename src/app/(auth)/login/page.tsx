@@ -1,6 +1,7 @@
 import OtherLoginMethod from '@/components/auth/login/other-login-method';
 import UserAuthLoginForm from '@/components/auth/login/user-auth-login-form';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
     title: 'Đăng nhập',
@@ -19,8 +20,24 @@ export default function LoginPage() {
                 {/*</p>*/}
             </div>
             <div className="grid gap-6">
-                <UserAuthLoginForm />
-                <OtherLoginMethod />
+                <Suspense
+                    fallback={
+                        <div className="text-center">
+                            Đang tải form đăng nhập...
+                        </div>
+                    }
+                >
+                    <UserAuthLoginForm />
+                </Suspense>
+                <Suspense
+                    fallback={
+                        <div className="text-center">
+                            Đang tải chức năng login khác...
+                        </div>
+                    }
+                >
+                    <OtherLoginMethod />
+                </Suspense>
             </div>
         </>
     );
