@@ -17,7 +17,7 @@ export default function BreadcrumbComponent({
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem key="home">
+                <BreadcrumbItem key="home-item">
                     <BreadcrumbLink href="/" className="flex gap-1">
                         <Home className="w-4 h-4" />
                         Home
@@ -27,16 +27,19 @@ export default function BreadcrumbComponent({
                 {breadcrumbs
                     .slice(0, breadcrumbs.length - 1)
                     .map((breadcrumb, index) => (
-                        <>
-                            <BreadcrumbItem key={`${index}-item`}>
+                        <div
+                            key={`${index}-item`}
+                            className="flex gap-2 items-center"
+                        >
+                            <BreadcrumbItem>
                                 <BreadcrumbLink href={breadcrumb.url}>
                                     {breadcrumb.title}
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator key={`${index}-separator`} />
-                        </>
+                            <BreadcrumbSeparator />
+                        </div>
                     ))}
-                <BreadcrumbItem key="lastItem">
+                <BreadcrumbItem key="last-item">
                     <BreadcrumbPage>
                         {breadcrumbs[breadcrumbs.length - 1].title}
                     </BreadcrumbPage>

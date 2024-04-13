@@ -1,4 +1,3 @@
-import OtherLoginMethod from '@/components/auth/login/other-login-method';
 import { UserAuthRegisterForm } from '@/components/auth/register/user-auth-register-form';
 import { Metadata } from 'next';
 import { Suspense } from 'react';

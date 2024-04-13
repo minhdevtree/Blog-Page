@@ -15,9 +15,6 @@ export default function LoginPage() {
                 <h1 className="text-2xl font-semibold tracking-tight text-sky-500">
                     Đăng nhập
                 </h1>
-                {/*<p className="text-sm text-muted-foreground">*/}
-                {/*  Enter your email and password below to access your account*/}
-                {/*</p>*/}
             </div>
             <div className="grid gap-6">
                 <Suspense
