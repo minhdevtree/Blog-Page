@@ -128,7 +128,7 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
         // Get all posts from database
         const posts = await prisma.post.findMany({
             skip,
-            // where: { published: PublishedType.PUBLISHED_ALL },
+            where: { parentId: null },
             orderBy: { publishedAt: sort === 'asc' ? 'asc' : 'desc' },
             take: pageMeta.pageSize,
             select: {

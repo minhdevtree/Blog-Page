@@ -3,10 +3,12 @@ import {
     Category,
     PageMeta,
     Post,
+    PostDetail,
     SearchPostParams,
     Tag,
     TopCreator,
 } from './define';
+import { get } from 'http';
 
 axios.defaults.baseURL = process.env.API_URL;
 
@@ -134,6 +136,16 @@ export const getTopCreators = async () => {
     } catch (error) {
         console.error(error);
         return [] as TopCreator[];
+    }
+};
+
+export const getPostDetail = async (slug: string) => {
+    try {
+        return await axios
+            .get(`/post/${slug}`)
+            .then(res => res.data.data as PostDetail);
+    } catch (error) {
+        return {} as PostDetail;
     }
 };
 

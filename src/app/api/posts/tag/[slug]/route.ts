@@ -138,6 +138,7 @@ export const GET = async (
                         slug: slug,
                     },
                 },
+                parentId: null,
             },
             orderBy: { publishedAt: sort === 'asc' ? 'asc' : 'desc' },
             take: pageMeta.pageSize,

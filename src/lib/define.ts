@@ -35,6 +35,65 @@ export type Post = {
     ];
 };
 
+export type PostDetail = {
+    id: string;
+    title: string;
+    summary: string;
+    content: string;
+    publishedAt: string;
+    published: string;
+    metas: MetaPostDetail[];
+    categories: [
+        {
+            id: string;
+            title: string;
+            slug: string;
+        }
+    ];
+    tags: [
+        {
+            id: string;
+            title: string;
+            slug: string;
+        }
+    ];
+    author: AuthorPostDetail;
+    _count: {
+        comments: number;
+        likes: number;
+    };
+    children: ChildPostDetail[];
+};
+
+export type ChildPostDetail = {
+    id: string;
+    title: string;
+    content: string;
+    order: number;
+    metas: [
+        {
+            key: string;
+            value: string;
+        }
+    ];
+};
+
+export type MetaPostDetail = {
+    key: string;
+    value: string;
+};
+
+export type AuthorPostDetail = {
+    id: string;
+    fullName: string;
+    img: string;
+    username: string;
+    _count: {
+        posts: number;
+        followers: number;
+    };
+};
+
 export type Category = {
     id: string;
     title: string;

@@ -3,10 +3,8 @@ import { Inter as FontSans } from 'next/font/google';
 import './globals.css';
 
 import { cn } from '@/lib/utils';
-import { siteConfig } from '@/config/site';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
-import { auth } from '@/lib/auth';
 import { Suspense } from 'react';
 import FullPageLoadingOverlay from '@/components/shared/full-page-loading-overlay';
 
@@ -29,7 +27,6 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="vi" suppressHydrationWarning>
-            <Toaster />
             <body
                 className={cn(
                     'min-h-screen bg-background font-sans antialiased',
@@ -50,6 +47,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
                         </div>
                     </ThemeProvider>
                 </Suspense>
+                <Toaster />
             </body>
         </html>
     );

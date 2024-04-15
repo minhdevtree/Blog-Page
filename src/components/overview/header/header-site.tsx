@@ -22,7 +22,7 @@ export default async function HeaderSite() {
 
                 <div className="ml-auto hidden sm:block">
                     <div className="flex items-center space-x-4 ">
-                        <MainNav className="mx-6 hidden sm:flex" />
+                        <MainNav className="mx-6 hidden lg:flex" />
                         <ModeToggle />
 
                         {session ? (

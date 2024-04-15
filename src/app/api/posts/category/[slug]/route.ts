@@ -133,6 +133,7 @@ export const GET = async (
         const posts = await prisma.post.findMany({
             skip,
             where: {
+                parentId: null,
                 OR: [
                     {
                         categories: {

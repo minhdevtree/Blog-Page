@@ -17,25 +17,27 @@ import CategoryBadge from '@/components/shared/category-badge';
 import TagBadge from '@/components/shared/tag-badge';
 import PublishedBadge from '@/components/shared/published-badge';
 import { BasicTooltip } from '@/components/shared/tool-tip';
+import Link from 'next/link';
 
 export function PostCard({ post }: { post: Post }) {
     return (
         <Card className="p-5 bg-card">
             <CardContent className="p-0 flex flex-col justify-center sm:gap-2 relative">
-                <div className="w-full ">
-                    <AspectRatio ratio={16 / 9} className="bg-muted">
-                        <Image
-                            src={
-                                post.metas.find(
-                                    meta => meta.key === KeyType.IMG
-                                )?.value || '/background/nobackground.png'
-                            }
-                            alt="Post Image"
-                            fill
-                            className="rounded-md object-cover"
-                        />
-                    </AspectRatio>
-                    {/* <TooltipProvider>
+                <Link href={`/post/${post.slug}`}>
+                    <div className="w-full ">
+                        <AspectRatio ratio={16 / 9} className="bg-muted">
+                            <Image
+                                src={
+                                    post.metas.find(
+                                        meta => meta.key === KeyType.IMG
+                                    )?.value || '/background/nobackground.png'
+                                }
+                                alt="Post Image"
+                                fill
+                                className="rounded-md object-cover"
+                            />
+                        </AspectRatio>
+                        {/* <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
@@ -50,7 +52,8 @@ export function PostCard({ post }: { post: Post }) {
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider> */}
-                </div>
+                    </div>
+                </Link>
                 <div className="flex flex-col justify-between">
                     <div className="">
                         <div>
@@ -64,17 +67,18 @@ export function PostCard({ post }: { post: Post }) {
                                     ))}
                                 </div>
                             </div>
-
-                            <div className="mb-2 mt-5">
-                                <h1 className="text-xl font-bold line-clamp-1">
-                                    <BasicTooltip title={post.title} />
-                                </h1>
-                            </div>
-                            <div className="text-sm text-muted-foreground line-clamp-3 ">
-                                {post.summary}
-                                <br />
-                                {post.content}
-                            </div>
+                            <Link href={`/post/${post.slug}`}>
+                                <div className="mb-2 mt-5">
+                                    <h1 className="text-xl font-bold line-clamp-1">
+                                        <BasicTooltip title={post.title} />
+                                    </h1>
+                                </div>
+                                <div className="text-sm text-muted-foreground line-clamp-3 ">
+                                    {post.summary}
+                                    <br />
+                                    {post.content}
+                                </div>
+                            </Link>
                         </div>
                         <Separator className="my-5" />
                         <div className="flex justify-between">

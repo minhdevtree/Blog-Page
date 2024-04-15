@@ -21,7 +21,7 @@ export function UserNav({ session }: { session: any }) {
                         variant="ghost"
                         className="relative h-8 w-8 rounded-full"
                     >
-                        <Avatar className=" border-solid border-sky-500 border-2 w-[40px] h-[40px]">
+                        <Avatar className="border-solid border-sky-500 border-2 w-[40px] h-[40px]">
                             <AvatarImage
                                 src={session.user.img || '/avatar/noavatar.png'}
                                 alt="picture"

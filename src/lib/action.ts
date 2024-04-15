@@ -90,3 +90,33 @@ export const register = async (
         return { isSuccess: false, error: 'Đã có lỗi xảy ra' };
     }
 };
+
+export const handleLikePost = async (postId: string, userId: string) => {
+    try {
+        const like = await prisma.like.findFirst({
+            where: {
+                userId,
+                postId,
+            },
+        });
+
+        if (like) {
+            await prisma.like.delete({
+                where: {
+                    id: like.id,
+                },
+            });
+            return { isSuccess: true, message: 'Đã bỏ thích bài viết' };
+        } else {
+            await prisma.like.create({
+                data: {
+                    userId,
+                    postId,
+                },
+            });
+            return { isSuccess: true, message: 'Đã thích bài viết' };
+        }
+    } catch {
+        return { isSuccess: false, error: 'Đã xảy ra lỗi khi thích bài viết' };
+    }
+};

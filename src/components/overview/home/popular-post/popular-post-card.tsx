@@ -13,6 +13,7 @@ import CategoryBadge from '@/components/shared/category-badge';
 import TagBadge from '@/components/shared/tag-badge';
 import PublishedBadge from '@/components/shared/published-badge';
 import { BasicTooltip } from '@/components/shared/tool-tip';
+import Link from 'next/link';
 
 export function PopularPostCard({ post }: { post: Post }) {
     return (
@@ -35,29 +36,33 @@ export function PopularPostCard({ post }: { post: Post }) {
                 </TooltipProvider> */}
                 <div className="flex flex-col justify-between">
                     <div className="">
-                        <div>
-                            <div className="flex justify-between">
-                                <div className="flex gap-2">
-                                    {post.categories.map((category, index) => (
-                                        <CategoryBadge
-                                            key={index}
-                                            title={category.title}
-                                        />
-                                    ))}
+                        <Link href={`/post/${post.slug}`}>
+                            <div>
+                                <div className="flex justify-between">
+                                    <div className="flex gap-2">
+                                        {post.categories.map(
+                                            (category, index) => (
+                                                <CategoryBadge
+                                                    key={index}
+                                                    title={category.title}
+                                                />
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="mb-2 mt-5">
+                                    <h1 className="text-xl font-bold line-clamp-1">
+                                        <BasicTooltip title={post.title} />
+                                    </h1>
+                                </div>
+                                <div className="text-sm text-muted-foreground line-clamp-2 ">
+                                    {post.summary}
+                                    <br />
+                                    {post.content}
                                 </div>
                             </div>
-
-                            <div className="mb-2 mt-5">
-                                <h1 className="text-xl font-bold line-clamp-1">
-                                    <BasicTooltip title={post.title} />
-                                </h1>
-                            </div>
-                            <div className="text-sm text-muted-foreground line-clamp-2 ">
-                                {post.summary}
-                                <br />
-                                {post.content}
-                            </div>
-                        </div>
+                        </Link>
                         <Separator className="my-5" />
                         <div className="flex justify-between">
                             <div className="flex items-center gap-2">

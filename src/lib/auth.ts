@@ -157,9 +157,9 @@ export const {
             }
             return true;
         },
-        // async redirect({ url, baseUrl }) {
-        //     return baseUrl;
-        // },
+        async redirect({ url, baseUrl }) {
+            return baseUrl;
+        },
         ...authConfig.callbacks,
     },
 });

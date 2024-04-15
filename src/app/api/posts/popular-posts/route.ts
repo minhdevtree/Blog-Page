@@ -49,6 +49,7 @@ export const GET = async (request: NextRequest) => {
 
         // Get all posts from database
         const posts = await prisma.post.findMany({
+            where: { parentId: null },
             orderBy: {
                 likes: {
                     _count: 'desc',

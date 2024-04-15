@@ -24,32 +24,35 @@ model User {
   updatedAt   DateTime      @updatedAt
   lastLogin   DateTime?
   bookmarks   BookMark[]
+  followers   Follow[]      @relation("FollowerToUser")
+  following   Follow[]      @relation("FollowingToUser")
   likes       Like[]
   posts       Post[]
   comments    PostComment[]
 }
 
 model Post {
-  id          String        @id @default(cuid())
+  id          String         @id @default(cuid())
   parentId    String?
   title       String
   summary     String?
   content     String?
-  published   PublishedType @default(DRAFT)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  published   PublishedType? @default(DRAFT)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   publishedAt DateTime?
-  slug        String        @unique
+  slug        String?        @unique
   authorId    String?
+  order       Int            @default(0)
   BookMarks   BookMark[]
   likes       Like[]
-  author      User?         @relation(fields: [authorId], references: [id])
-  parent      Post?         @relation("PostToPost", fields: [parentId], references: [id])
-  children    Post[]        @relation("PostToPost")
+  author      User?          @relation(fields: [authorId], references: [id])
+  parent      Post?          @relation("PostToPost", fields: [parentId], references: [id])
+  children    Post[]         @relation("PostToPost")
   comments    PostComment[]
   metas       PostMeta[]
-  categories  Category[]    @relation("CategoryToPost")
-  tags        Tag[]         @relation("PostToTag")
+  categories  Category[]     @relation("CategoryToPost")
+  tags        Tag[]          @relation("PostToTag")
 }
 
 model PostMeta {
@@ -110,6 +113,15 @@ model Like {
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("FollowerToUser", fields: [followerId], references: [id])
+  following   User     @relation("FollowingToUser", fields: [followingId], references: [id])
 }
 
 enum RoleType {

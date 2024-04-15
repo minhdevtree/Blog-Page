@@ -21,6 +21,12 @@ export async function generateMetadata({
         },
         select: {
             title: true,
+            parent: {
+                select: {
+                    title: true,
+                    slug: true,
+                },
+            },
         },
     });
 
