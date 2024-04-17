@@ -16,6 +16,8 @@ type Props = {
     searchParams: { [key: string]: string | string[] | undefined };
 };
 
+export const maxDuration = 300;
+
 export async function generateMetadata({
     params,
     searchParams,
