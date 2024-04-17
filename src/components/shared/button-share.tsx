@@ -16,13 +16,13 @@ const ButtonShare = () => {
             <DialogTrigger asChild>
                 <Button
                     variant="hidden"
-                    className="flex gap-2 items-center hover:text-sky-600"
+                    className="flex gap-2 items-center hover:text-sky-600 hover:bg-sky-100"
                     onClick={() => {
                         navigator.clipboard.writeText(window.location.href);
                     }}
                 >
                     <Share2 />
-                    <span>Chia sẻ</span>
+                    <span className="max-md:hidden">Chia sẻ</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

@@ -9,6 +9,7 @@ import { BreadItem } from '@/lib/define';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import prisma from '@/lib/prisma';
+import Menu from '@/components/post/menu/menu';
 
 type Props = {
     params: { slug: string };
@@ -53,13 +54,17 @@ export default async function PostPage({
     ] as BreadItem[];
 
     const session = await auth();
-    const isLiked =
-        (await prisma.like.findFirst({
-            where: {
-                userId: session?.user?.id,
-                postId: post.id,
-            },
-        })) !== null;
+    let isLiked = false;
+    if (session?.user?.id) {
+        isLiked =
+            (await prisma.like.findFirst({
+                where: {
+                    userId: session?.user?.id,
+                    postId: post.id,
+                },
+            })) !== null;
+    }
+
     return (
         <Card className="w-full px-5 py-10">
             <div className="grid grid-cols-4 max-lg:grid-cols-3 gap-5">
@@ -82,9 +87,8 @@ export default async function PostPage({
                             </Suspense>
                         </div>
                         <div className="sticky top-14">
-                            <span className={`text-2xl font-bold`}>
-                                Mục lục
-                            </span>
+                            <span className="text-2xl font-bold">Mục lục</span>
+                            <Menu post={post} />
                         </div>
                     </div>
                 </div>

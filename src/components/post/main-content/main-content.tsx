@@ -5,6 +5,10 @@ import ChildPost from './child-post';
 import { PostDetail } from '@/lib/define';
 import CategoryBadge from '@/components/shared/category-badge';
 import PostAction from './post-action/post-action';
+import PopularPostList from '@/components/overview/home/popular-post/popular-post-list';
+import { Suspense } from 'react';
+import PopularPostListLoading from '@/components/overview/home/loading/popular-post-loading/popular-post-list-loading';
+import PostComment from './post-comment/post-comment';
 
 export default function MainContent({
     post,
@@ -45,6 +49,15 @@ export default function MainContent({
                 isLiked={isLiked}
                 postId={post.id}
             />
+
+            <div className="my-16">
+                <span className={`text-2xl font-bold`}>Bài viết phổ biến</span>
+                <Suspense fallback={<PopularPostListLoading />}>
+                    <PopularPostList />
+                </Suspense>
+            </div>
+
+            <PostComment />
         </div>
     );
 }

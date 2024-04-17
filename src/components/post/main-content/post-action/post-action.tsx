@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator';
 import { handleLikePost } from '@/lib/action';
 import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -36,6 +37,17 @@ export default function PostAction({
             router.refresh();
         }
     };
+
+    const handleClick = (event: any) => {
+        event.preventDefault();
+        const element = document.getElementById('post-comment');
+        if (element) {
+            window.scrollTo({
+                top: element.offsetTop - 100, // offset by 100px
+                behavior: 'smooth',
+            });
+        }
+    };
     return (
         <>
             <div className="flex gap-4 mt-10">
@@ -48,32 +60,36 @@ export default function PostAction({
                     <span>{commentsCount}</span>
                 </div>
             </div>
-            <Separator className="mb-5 mt-2" />
+            <Separator className="mb-2 md:mb-5 mt-2" />
             <div className="flex justify-between md:px-10 text-sky-500">
                 <Button
                     variant="hidden"
-                    className="flex gap-2 items-center hover:text-sky-600"
+                    className="flex gap-2 items-center hover:text-sky-600 hover:bg-sky-100"
                     onClick={handleLike}
                 >
                     {isLiked ? (
                         <>
                             <HeartFilledIcon className="w-7 h-7" />
-                            <span>Đã thích</span>
+                            <span className="max-md:hidden">Đã thích</span>
                         </>
                     ) : (
                         <>
                             <HeartIcon className="w-7 h-7" />
-                            <span>Thích</span>
+                            <span className="max-md:hidden">Thích</span>
                         </>
                     )}
                 </Button>
-                <div className="flex gap-2 items-center">
+                <Link
+                    href="#post-comment"
+                    className="flex gap-2 items-center hover:text-sky-600 hover:bg-sky-100 p-2 px-5 rounded-md"
+                    onClick={e => handleClick(e)}
+                >
                     <MessageCircle />
-                    <span>Bình luận</span>
-                </div>
+                    <span className="max-md:hidden">Bình luận</span>
+                </Link>
                 <ButtonShare />
             </div>
-            <Separator className="my-5" />
+            <Separator className="my-2 md:my-5" />
         </>
     );
 }
