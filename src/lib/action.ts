@@ -120,3 +120,27 @@ export const handleLikePost = async (postId: string, userId: string) => {
         return { isSuccess: false, error: 'Đã xảy ra lỗi khi thích bài viết' };
     }
 };
+
+export const handleCommentPost = async (
+    postId: string,
+    userId: string,
+    content: string,
+    parentId?: string
+) => {
+    try {
+        await prisma.postComment.create({
+            data: {
+                content,
+                userId,
+                postId,
+                parentId,
+            },
+        });
+        return { isSuccess: true, message: 'Đã bình luận bài viết' };
+    } catch {
+        return {
+            isSuccess: false,
+            error: 'Đã xảy ra lỗi khi bình luận bài viết',
+        };
+    }
+};

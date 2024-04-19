@@ -17,6 +17,13 @@ export default function Menu({ post }: { post: PostDetail }) {
         }
     };
 
+    if (post.children.length === 0)
+        return (
+            <div className="text-center text-sm mt-5">
+                Bài viết này không có mục lục
+            </div>
+        );
+
     return (
         <ScrollArea className="h-80 rounded-md border mt-5">
             <div className="p-4">

@@ -3,12 +3,12 @@ import {
     Category,
     PageMeta,
     Post,
+    PostComment,
     PostDetail,
     SearchPostParams,
     Tag,
     TopCreator,
 } from './define';
-import { get } from 'http';
 
 axios.defaults.baseURL = process.env.API_URL;
 
@@ -146,6 +146,16 @@ export const getPostDetail = async (slug: string) => {
             .then(res => res.data.data as PostDetail);
     } catch (error) {
         return {} as PostDetail;
+    }
+};
+
+export const getPostParentComments = async (postId: string) => {
+    try {
+        return await axios
+            .get(`/post/${postId}/comments`)
+            .then(res => res.data.data as PostComment[]);
+    } catch (error) {
+        return [] as PostComment[];
     }
 };
 

@@ -5,6 +5,13 @@ export const loginFormSchema = z.object({
     password: z.string().min(8, { message: 'Mật khẩu phải ít nhất 8 kí tự' }),
 });
 
+export const postCommentSchema = z.object({
+    content: z
+        .string()
+        .min(1, { message: 'Nội dung bình luận không được để trống' })
+        .max(500, { message: 'Nội dung bình luận tối đa 500 kí tự' }),
+});
+
 export const RegisterFormSchema = z.object({
     fullName: z
         .string({ required_error: 'Vui lòng điền họ tên' })

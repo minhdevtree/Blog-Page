@@ -14,10 +14,12 @@ export default function MainContent({
     post,
     userId,
     isLiked,
+    slug,
 }: {
     post: PostDetail;
     userId: string;
     isLiked: boolean;
+    slug: string;
 }) {
     return (
         <div className="mt-5">
@@ -57,7 +59,7 @@ export default function MainContent({
                 </Suspense>
             </div>
 
-            <PostComment />
+            <PostComment postId={post.id} />
         </div>
     );
 }

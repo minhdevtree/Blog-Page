@@ -155,6 +155,17 @@ export type SearchPostParams = {
     pageSize?: number;
 };
 
+export type PostComment = {
+    id: string;
+    content: string;
+    createdAt: string;
+    user: {
+        id: string;
+        username: string;
+        img: string;
+    };
+};
+
 export enum RoleType {
     ADMIN,
     USER,

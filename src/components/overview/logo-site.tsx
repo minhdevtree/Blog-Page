@@ -1,5 +1,4 @@
 import { siteConfig } from '@/config/site';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Icons } from '../icons/icons';
 

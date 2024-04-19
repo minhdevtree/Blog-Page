@@ -76,6 +76,7 @@ export default async function PostPage({
                         post={post}
                         userId={session?.user?.id || ''}
                         isLiked={isLiked}
+                        slug={params.slug}
                     />
                 </div>
                 <div className="col-span-1 grid grid-cols-1 gap-2 max-lg:hidden">
