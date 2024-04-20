@@ -29,6 +29,7 @@ model User {
   likes       Like[]
   posts       Post[]
   comments    PostComment[]
+  postCommentLikes PostCommentLike[]
 }
 
 model Post {
@@ -77,6 +78,7 @@ model PostComment {
   children  PostComment[] @relation("PostCommentToPostComment")
   post      Post          @relation(fields: [postId], references: [id])
   user      User?         @relation(fields: [userId], references: [id])
+  likes     PostCommentLike[]
 }
 
 model Category {
@@ -88,6 +90,15 @@ model Category {
   parent   Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
   children Category[] @relation("CategoryToCategory")
   posts    Post[]     @relation("CategoryToPost")
+}
+
+model PostCommentLike {
+  id          String   @id @default(cuid())
+  userId      String
+  postCommentId String
+  createdAt   DateTime @default(now())
+  postComment PostComment @relation(fields: [postCommentId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
 }
 
 model Tag {

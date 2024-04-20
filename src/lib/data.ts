@@ -5,6 +5,7 @@ import {
     Post,
     PostComment,
     PostDetail,
+    SearchCommentParams,
     SearchPostParams,
     Tag,
     TopCreator,
@@ -149,13 +150,33 @@ export const getPostDetail = async (slug: string) => {
     }
 };
 
-export const getPostParentComments = async (postId: string) => {
+export const getPostParentComments = async (
+    postId: string,
+    searchParams?: SearchCommentParams
+) => {
+    if (!searchParams) {
+        searchParams = {
+            page: 1,
+            pageSize: 5,
+        };
+    }
     try {
-        return await axios
-            .get(`/post/${postId}/comments`)
-            .then(res => res.data.data as PostComment[]);
+        const { comments, pageMeta } = await axios
+            .get(`/post/${postId}/comments`, {
+                params: searchParams,
+            })
+            .then(res => {
+                return {
+                    comments: res.data.data.comments as PostComment[],
+                    pageMeta: res.data.data.pageMeta as PageMeta,
+                };
+            });
+        return { comments, pageMeta };
     } catch (error) {
-        return [] as PostComment[];
+        return {
+            comments: [] as PostComment[],
+            pageMeta: pageMetaDefault as PageMeta,
+        };
     }
 };
 

@@ -5,11 +5,13 @@ import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
 import { Card } from '@/components/ui/card';
 import { auth } from '@/lib/auth';
 import { getPostDetail } from '@/lib/data';
-import { BreadItem } from '@/lib/define';
+import { BreadItem, SearchCommentParams } from '@/lib/define';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import prisma from '@/lib/prisma';
 import Menu from '@/components/post/menu/menu';
+import PostComment from '@/components/post/main-content/post-comment/post-comment';
+import PostCommentListLoading from '@/components/post/main-content/post-comment/loading/post-comment-list-loading';
 
 type Props = {
     params: { slug: string };
@@ -39,8 +41,10 @@ export async function generateMetadata({
 
 export default async function PostPage({
     params,
+    searchParams,
 }: {
     params: { slug: string };
+    searchParams: SearchCommentParams;
 }) {
     const post = await getPostDetail(params.slug);
 
@@ -76,9 +80,11 @@ export default async function PostPage({
                         post={post}
                         userId={session?.user?.id || ''}
                         isLiked={isLiked}
-                        slug={params.slug}
                     />
+
+                    <PostComment postId={post.id} searchParams={searchParams} />
                 </div>
+
                 <div className="col-span-1 grid grid-cols-1 gap-2 max-lg:hidden">
                     <div className="flex flex-col gap-5">
                         <div>

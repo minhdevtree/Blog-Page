@@ -155,12 +155,22 @@ export type SearchPostParams = {
     pageSize?: number;
 };
 
+export type SearchCommentParams = {
+    page?: number;
+    pageSize?: number;
+};
+
 export type PostComment = {
     id: string;
     content: string;
     createdAt: string;
+    _count: {
+        children: number;
+        likes: number;
+    };
     user: {
         id: string;
+        fullName: string;
         username: string;
         img: string;
     };

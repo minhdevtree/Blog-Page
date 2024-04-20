@@ -11,13 +11,10 @@ import { z } from 'zod';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Icons } from '@/components/icons/icons';
 import { useRouter } from 'next/navigation';
 import { handleCommentPost } from '@/lib/action';

@@ -110,7 +110,9 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
 
         // Get all posts from database
 
-        pageMeta.totalElements = await prisma.post.count();
+        pageMeta.totalElements = await prisma.post.count({
+            where: { parentId: null },
+        });
         pageMeta.pageSize = pageSize ? parseInt(pageSize) : pageMeta.pageSize;
         pageMeta.totalPages = Math.ceil(
             pageMeta.totalElements / pageMeta.pageSize

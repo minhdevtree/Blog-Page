@@ -121,6 +121,36 @@ export const handleLikePost = async (postId: string, userId: string) => {
     }
 };
 
+export const handleLikeComment = async (commentId: string, userId: string) => {
+    try {
+        const like = await prisma.postCommentLike.findFirst({
+            where: {
+                userId,
+                postCommentId: commentId,
+            },
+        });
+
+        if (like) {
+            await prisma.postCommentLike.delete({
+                where: {
+                    id: like.id,
+                },
+            });
+            return { isSuccess: true, message: 'Đã bỏ thích bình luận' };
+        } else {
+            await prisma.postCommentLike.create({
+                data: {
+                    userId,
+                    postCommentId: commentId,
+                },
+            });
+            return { isSuccess: true, message: 'Đã thích bình luận' };
+        }
+    } catch {
+        return { isSuccess: false, error: 'Đã xảy ra lỗi khi thích bình luận' };
+    }
+};
+
 export const handleCommentPost = async (
     postId: string,
     userId: string,

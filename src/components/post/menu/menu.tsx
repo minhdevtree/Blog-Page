@@ -33,7 +33,7 @@ export default function Menu({ post }: { post: PostDetail }) {
                             className="text-sm"
                             onClick={event => handleClick(event, post.id)}
                         >
-                            {post.title}
+                            {post.order}. {post.title}
                         </div>
                         <Separator className="my-2" />
                     </Link>
