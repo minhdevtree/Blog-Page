@@ -8,10 +8,12 @@ import { auth } from '@/lib/auth';
 import { ModeToggle } from './mode-toggle';
 import CategoryList from './category-list';
 import { getCategories } from '@/lib/data';
+import ButtonLogin from './button-login';
 
 export default async function HeaderSite() {
     const session = await auth();
     const categories = await getCategories();
+
     return (
         <header className="md:px-12 sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-14 items-center px-4 relative">
@@ -28,9 +30,7 @@ export default async function HeaderSite() {
                         {session ? (
                             <UserNav session={session} />
                         ) : (
-                            <Button asChild>
-                                <Link href={'/login'}>Đăng nhập</Link>
-                            </Button>
+                            <ButtonLogin />
                         )}
                     </div>
                 </div>

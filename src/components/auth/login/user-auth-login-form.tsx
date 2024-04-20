@@ -22,13 +22,16 @@ import { useState } from 'react';
 import { Icons } from '../../icons/icons';
 import { login } from '@/lib/action';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function UserAuthLoginForm() {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [loginResult, setLoginResult] = useState<
         { error?: string; isSuccess?: boolean } | undefined
     >(undefined);
-
+    const searchParams = useSearchParams();
+    const callbackUrl = searchParams.get('callbackUrl');
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
@@ -44,7 +47,8 @@ export default function UserAuthLoginForm() {
             setLoginResult(result);
         } else {
             setLoginResult({ isSuccess: true });
-            window.location.href = '/';
+            router.push(callbackUrl || '/');
+            router.refresh();
         }
         setIsLoading(false);
     };

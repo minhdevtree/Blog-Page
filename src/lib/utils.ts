@@ -3,7 +3,7 @@ import { format, formatDistanceToNow, isThisYear } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { twMerge } from 'tailwind-merge';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import { ReadonlyURLSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams, usePathname } from 'next/navigation';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

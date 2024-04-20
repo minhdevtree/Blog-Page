@@ -27,12 +27,12 @@ export default function MainContent({
                 likesCount={post._count.likes}
                 publishedAt={post.publishedAt}
             />
-            <div className="mt-3">
+            <div className="mt-3 flex gap-2">
                 {post.categories.map(category => (
                     <CategoryBadge title={category.title} key={category.id} />
                 ))}
             </div>
-            <div>
+            <div className="mt-2 flex gap-2">
                 {post.tags.map(tag => (
                     <TagBadge title={tag.title} key={tag.id} />
                 ))}

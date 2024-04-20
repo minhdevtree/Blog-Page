@@ -1,5 +1,6 @@
 import { getPostChildComments } from '@/lib/data';
 import PostCommentCard from './post-comment-card';
+import Link from 'next/link';
 
 export default async function PostCommentChildList({
     postId,
@@ -13,7 +14,7 @@ export default async function PostCommentChildList({
     const { comments, pageMeta } = await getPostChildComments(
         postId,
         parentId,
-        { page: 1, pageSize: 9 }
+        { page: 1, pageSize: 5 }
     );
     return (
         <div className="w-full">
@@ -26,6 +27,15 @@ export default async function PostCommentChildList({
                     child={true}
                 />
             ))}
+            {pageMeta.hasNext && (
+                <div className="text-center mt-5">
+                    <Link href={`/p/${postId}?commentId=${parentId}`}>
+                        <button className="text-sky-500">
+                            Xem thêm bình luận
+                        </button>
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

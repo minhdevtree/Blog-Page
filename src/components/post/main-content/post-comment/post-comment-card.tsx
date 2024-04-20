@@ -14,11 +14,13 @@ export default async function PostCommentCard({
     session,
     postId,
     child,
+    onlyParent,
 }: {
     comment: PostComment;
     session: any;
     postId: string;
     child?: boolean;
+    onlyParent?: boolean;
 }) {
     let isLiked = false;
     if (session?.user?.id) {
@@ -79,12 +81,19 @@ export default async function PostCommentCard({
                                         postId={postId}
                                     />
                                 )}
+                                {onlyParent && (
+                                    <PostCommentReply
+                                        comment={comment}
+                                        session={session}
+                                        postId={postId}
+                                    />
+                                )}
                             </div>
                         </>
                     )}
                 </Card>
             </div>
-            {comment._count.children > 0 && (
+            {comment._count.children > 0 && !onlyParent && (
                 <PostCommentChild
                     comment={comment}
                     postId={postId}
