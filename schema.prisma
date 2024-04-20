@@ -163,6 +163,7 @@ enum PublishedType {
 
 enum KeyType {
   IMG
+  LIST_IMG
   CODE
   LINK
 }
