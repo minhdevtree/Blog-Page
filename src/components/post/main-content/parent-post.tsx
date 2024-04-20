@@ -7,9 +7,7 @@ export default function ParentPost({ post }: { post: PostDetail }) {
             <h1 className="text-3xl font-bold leading-none text-sky-500 my-5">
                 {post.title}
             </h1>
-            <p className="text-lg leading-none text-muted-foreground mt-3">
-                {post.summary}
-            </p>
+            <p className="text-lg text-muted-foreground mt-3">{post.summary}</p>
             <div
                 className="mt-10"
                 dangerouslySetInnerHTML={{ __html: post.content }}
