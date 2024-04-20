@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { PostComment } from '@/lib/define';
 import CommentForm from './comment-form';
+import Link from 'next/link';
 
 export default function PostCommentReply({
     comment,
@@ -38,11 +39,26 @@ export default function PostCommentReply({
                         </DialogTitle>
                         <DialogDescription>{comment.content}</DialogDescription>
                     </DialogHeader>
-                    <CommentForm
-                        parentId={comment.id}
-                        session={session}
-                        postId={postId}
-                    />
+                    {comment._count.children > 9 ? (
+                        <Link
+                            href={`/p/${postId}?commentId=${comment.id}`}
+                            className="flex justify-center"
+                        >
+                            <Button
+                                className="my-2 mx-auto"
+                                variant="outline"
+                                size="sm"
+                            >
+                                Xem tất cả {comment._count.children} phản hồi
+                            </Button>
+                        </Link>
+                    ) : (
+                        <CommentForm
+                            parentId={comment.id}
+                            session={session}
+                            postId={postId}
+                        />
+                    )}
                 </DialogContent>
             </Dialog>
         </>

@@ -64,7 +64,7 @@ export default function PostAction({
             <div className="flex justify-between md:px-10 text-sky-500">
                 <Button
                     variant="hidden"
-                    className="flex gap-2 items-center hover:text-sky-600 hover:bg-sky-100"
+                    className="flex gap-2 items-center hover:text-sky-600 hover:dark:bg-gray-700 hover:bg-sky-100"
                     onClick={handleLike}
                 >
                     {isLiked ? (
@@ -81,7 +81,7 @@ export default function PostAction({
                 </Button>
                 <Link
                     href="#post-comment"
-                    className="flex gap-2 items-center hover:text-sky-600 hover:bg-sky-100 p-2 px-5 rounded-md"
+                    className="flex gap-2 items-center hover:text-sky-600 hover:dark:bg-gray-700 hover:bg-sky-100 p-2 px-5 rounded-md"
                     onClick={e => handleClick(e)}
                 >
                     <MessageCircle />
