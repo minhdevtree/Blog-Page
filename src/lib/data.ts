@@ -180,6 +180,37 @@ export const getPostParentComments = async (
     }
 };
 
+export const getPostChildComments = async (
+    postId: string,
+    parentId: string,
+    searchParams?: SearchCommentParams
+) => {
+    if (!searchParams) {
+        searchParams = {
+            page: 1,
+            pageSize: 5,
+        };
+    }
+    try {
+        const { comments, pageMeta } = await axios
+            .get(`/post/${postId}/comments/${parentId}`, {
+                params: searchParams,
+            })
+            .then(res => {
+                return {
+                    comments: res.data.data.comments as PostComment[],
+                    pageMeta: res.data.data.pageMeta as PageMeta,
+                };
+            });
+        return { comments, pageMeta };
+    } catch (error) {
+        return {
+            comments: [] as PostComment[],
+            pageMeta: pageMetaDefault as PageMeta,
+        };
+    }
+};
+
 // Demo purpose
 export async function wait(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));

@@ -24,9 +24,11 @@ import Link from 'next/link';
 export default function CommentForm({
     session,
     postId,
+    parentId,
 }: {
     session: any;
     postId: string;
+    parentId?: string;
 }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +46,8 @@ export default function CommentForm({
         const result = await handleCommentPost(
             postId,
             session.user.id,
-            values.content
+            values.content,
+            parentId
         );
         if (result?.error) {
             toast.error(result.error);

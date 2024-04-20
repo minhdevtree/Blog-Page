@@ -1,20 +1,19 @@
-import { getPostParentComments } from '@/lib/data';
+import { getPostChildComments } from '@/lib/data';
 import PostCommentCard from './post-comment-card';
-import { PostComment, SearchCommentParams } from '@/lib/define';
-import ListPagination from '@/components/shared/list-pagination';
 
-export default async function PostCommentList({
+export default async function PostCommentChildList({
     postId,
-    searchParams,
+    parentId,
     session,
 }: {
     postId: string;
-    searchParams: SearchCommentParams;
+    parentId: string;
     session: any;
 }) {
-    const { comments, pageMeta } = await getPostParentComments(
+    const { comments, pageMeta } = await getPostChildComments(
         postId,
-        searchParams
+        parentId,
+        { page: 1, pageSize: 9 }
     );
     return (
         <div className="w-full">
@@ -24,9 +23,9 @@ export default async function PostCommentList({
                     key={comment.id}
                     session={session}
                     postId={postId}
+                    child={true}
                 />
             ))}
-            <ListPagination meta={pageMeta} scroll={false} />
         </div>
     );
 }

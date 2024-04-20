@@ -113,11 +113,6 @@ export const GET = async (
                         likes: true,
                     },
                 },
-                // _count: {
-                //     select: {
-                //         likes: true,
-                //     },
-                // },
                 user: {
                     select: {
                         id: true,

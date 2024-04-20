@@ -6,13 +6,19 @@ import { PostComment } from '@/lib/define';
 import { getFormatDistanceToNow } from '@/lib/utils';
 import { HeartIcon } from '@radix-ui/react-icons';
 import PostCommentLike from './post-comment-like';
+import PostCommentChild from './post-comment-child';
+import PostCommentReply from './post-comment-reply';
 
 export default async function PostCommentCard({
     comment,
     session,
+    postId,
+    child,
 }: {
     comment: PostComment;
     session: any;
+    postId: string;
+    child?: boolean;
 }) {
     let isLiked = false;
     if (session?.user?.id) {
@@ -66,21 +72,24 @@ export default async function PostCommentCard({
                                     commentId={comment.id}
                                     isLiked={isLiked}
                                 />
-                                <button className="text-sm text-muted-foreground">
-                                    Trả lời
-                                </button>
+                                {!child && (
+                                    <PostCommentReply
+                                        comment={comment}
+                                        session={session}
+                                        postId={postId}
+                                    />
+                                )}
                             </div>
                         </>
                     )}
                 </Card>
             </div>
             {comment._count.children > 0 && (
-                <div className="ml-24 flex gap-2 h-[1.25rem]">
-                    <Separator orientation="vertical" />
-                    <button className="text-sm text-muted-foreground">
-                        {comment._count.children} phản hồi
-                    </button>
-                </div>
+                <PostCommentChild
+                    comment={comment}
+                    postId={postId}
+                    session={session}
+                />
             )}
         </>
     );
