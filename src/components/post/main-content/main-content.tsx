@@ -8,15 +8,12 @@ import PostAction from './post-action/post-action';
 import PopularPostList from '@/components/overview/home/popular-post/popular-post-list';
 import { Suspense } from 'react';
 import PopularPostListLoading from '@/components/overview/home/loading/popular-post-loading/popular-post-list-loading';
-import PostComment from './post-comment/post-comment';
 
 export default function MainContent({
     post,
-    userId,
     isLiked,
 }: {
     post: PostDetail;
-    userId: string;
     isLiked: boolean;
 }) {
     return (
@@ -45,7 +42,6 @@ export default function MainContent({
             <PostAction
                 likesCount={post._count.likes}
                 commentsCount={post._count.comments}
-                userId={userId}
                 isLiked={isLiked}
                 postId={post.id}
             />

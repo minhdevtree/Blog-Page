@@ -44,8 +44,8 @@ export const GET = async (request: NextRequest) => {
         }
 
         // Get client IP
-        const ip = getClientIp(request);
-        apiRequestInfo.clientIp = ip || 'Unknown';
+        apiRequestInfo.clientIp =
+            request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
         // Get all posts from database
         const posts = await prisma.post.findMany({

@@ -29,7 +29,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <html lang="vi" suppressHydrationWarning>
             <body
                 className={cn(
-                    'min-h-screen bg-background font-sans antialiased',
+                    'min-h-screen bg-background font-sans antialiased transition-colors duration-1000',
                     fontSans.variable
                 )}
             >

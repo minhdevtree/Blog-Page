@@ -10,6 +10,7 @@ import {
     Tag,
     TopCreator,
 } from './define';
+import { getCookie } from './action';
 
 axios.defaults.baseURL = process.env.API_URL;
 
@@ -210,6 +211,38 @@ export const getPostChildComments = async (
         };
     }
 };
+
+export async function isLikedComment(commentId: string) {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    try {
+        return await axios
+            .get(`/comment/${commentId}/like`, {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            })
+            .then(res => res.data.data.like as boolean)
+            .catch(() => false);
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function isLikedPost(postId: string) {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    try {
+        return await axios
+            .get(`/post/${postId}/like`, {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            })
+            .then(res => res.data.data.like as boolean)
+            .catch(() => false);
+    } catch (error) {
+        return false;
+    }
+}
 
 // Demo purpose
 export async function wait(ms: number) {

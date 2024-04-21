@@ -4,7 +4,7 @@ import MainContent from '@/components/post/main-content/main-content';
 import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
 import { Card } from '@/components/ui/card';
 import { auth } from '@/lib/auth';
-import { getPostDetail } from '@/lib/data';
+import { getPostDetail, isLikedPost } from '@/lib/data';
 import { BreadItem, SearchCommentParams } from '@/lib/define';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -59,28 +59,14 @@ export default async function PostPage({
         },
     ] as BreadItem[];
 
-    const session = await auth();
-    let isLiked = false;
-    if (session?.user?.id) {
-        isLiked =
-            (await prisma.like.findFirst({
-                where: {
-                    userId: session?.user?.id,
-                    postId: post.id,
-                },
-            })) !== null;
-    }
+    const isLiked = await isLikedPost(post.id);
 
     return (
         <Card className="w-full px-5 py-10">
             <div className="grid grid-cols-4 max-lg:grid-cols-3 gap-5">
                 <div className="col-span-3">
                     <BreadcrumbComponent breadcrumbs={breadItems} />
-                    <MainContent
-                        post={post}
-                        userId={session?.user?.id || ''}
-                        isLiked={isLiked}
-                    />
+                    <MainContent post={post} isLiked={isLiked} />
 
                     <PostComment postId={post.id} searchParams={searchParams} />
                 </div>

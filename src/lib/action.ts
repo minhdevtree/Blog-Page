@@ -1,11 +1,14 @@
 'use server';
 
 import { z } from 'zod';
+import axios from 'axios';
 import { signIn, signOut } from './auth';
 import { RegisterFormSchema, loginFormSchema } from './form-schema';
-import { hashPassword } from './utils';
 import prisma from '@/lib/prisma';
 import { AuthError } from 'next-auth';
+import { cookies } from 'next/headers';
+
+axios.defaults.baseURL = process.env.API_URL;
 
 export const githubLogin = async () => {
     await signIn('github');
@@ -43,112 +46,82 @@ export const login = async (formData: z.infer<typeof loginFormSchema>) => {
 export const register = async (
     formData: z.infer<typeof RegisterFormSchema>
 ) => {
-    try {
-        const {
+    const {
+        fullName,
+        username,
+        email,
+        phoneNumber,
+        password,
+    }: z.infer<typeof RegisterFormSchema> = formData;
+
+    const response = await axios
+        .post('/auth/register', {
             fullName,
             username,
             email,
             phoneNumber,
             password,
-        }: z.infer<typeof RegisterFormSchema> = formData;
+        })
+        .then(() => {
+            return { isSuccess: true, error: '' };
+        })
+        .catch(error => {
+            console.log(error.response.data);
+            return { isSuccess: false, error: error.response.data.message };
+        });
+    return response;
+};
 
-        let user = prisma.user.findUnique({ where: { username } });
-        if (await user) {
+export const getCookie = async (name: string) => {
+    return cookies().get(name)?.value ?? '';
+};
+
+export const handleLikePost = async (postId: string) => {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    const result = await axios
+        .post(`/post/${postId}/like`, undefined, {
+            headers: {
+                Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+            },
+        })
+        .then(response => {
+            if (response.data.data.error) {
+                return { isSuccess: false, message: response.data.data.error };
+            }
+            return { isSuccess: true, message: response.data.data.message };
+        })
+        .catch(error => {
             return {
                 isSuccess: false,
-                error: 'Tên đăng nhập đã tồn tại',
+                message: error.response.data.data.error,
             };
-        }
-
-        user = prisma.user.findUnique({ where: { email } });
-        if (await user) {
-            return { isSuccess: false, error: 'Email đã tồn tại' };
-        }
-
-        // if (phoneNumber) {
-        //     user = prisma.user.find({ where: { phoneNumber } });
-        //     if (await user) {
-        //         return {
-        //             isSuccess: false,
-        //             error: 'Số điện thoại đã tồn tại',
-        //         };
-        //     }
-        // }
-
-        await prisma.user.create({
-            data: {
-                fullName,
-                username,
-                email,
-                phoneNumber,
-                password: hashPassword(password),
-            },
         });
 
-        return { isSuccess: true };
-    } catch {
-        return { isSuccess: false, error: 'Đã có lỗi xảy ra' };
-    }
+    return result;
 };
 
-export const handleLikePost = async (postId: string, userId: string) => {
-    try {
-        const like = await prisma.like.findFirst({
-            where: {
-                userId,
-                postId,
+export const handleLikeComment = async (commentId: string) => {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    const result = await axios
+        .post(`/comment/${commentId}/like`, undefined, {
+            headers: {
+                Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
             },
+        })
+        .then(response => {
+            if (response.data.data.error) {
+                return { isSuccess: false, message: response.data.data.error };
+            }
+            return { isSuccess: true, message: response.data.data.message };
+        })
+        .catch(error => {
+            return {
+                isSuccess: false,
+                message: error.response.data.data.error,
+            };
         });
 
-        if (like) {
-            await prisma.like.delete({
-                where: {
-                    id: like.id,
-                },
-            });
-            return { isSuccess: true, message: 'Đã bỏ thích bài viết' };
-        } else {
-            await prisma.like.create({
-                data: {
-                    userId,
-                    postId,
-                },
-            });
-            return { isSuccess: true, message: 'Đã thích bài viết' };
-        }
-    } catch {
-        return { isSuccess: false, error: 'Đã xảy ra lỗi khi thích bài viết' };
-    }
-};
-
-export const handleLikeComment = async (commentId: string, userId: string) => {
-    try {
-        const like = await prisma.postCommentLike.findFirst({
-            where: {
-                userId,
-                postCommentId: commentId,
-            },
-        });
-
-        if (like) {
-            await prisma.postCommentLike.delete({
-                where: {
-                    id: like.id,
-                },
-            });
-            return { isSuccess: true, message: 'Đã bỏ thích bình luận' };
-        } else {
-            await prisma.postCommentLike.create({
-                data: {
-                    userId,
-                    postCommentId: commentId,
-                },
-            });
-            return { isSuccess: true, message: 'Đã thích bình luận' };
-        }
-    } catch {
-        return { isSuccess: false, error: 'Đã xảy ra lỗi khi thích bình luận' };
-    }
+    return result;
 };
 
 export const handleCommentPost = async (

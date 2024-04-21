@@ -13,29 +13,23 @@ import { toast } from 'sonner';
 export default function PostAction({
     likesCount,
     commentsCount,
-    userId,
     isLiked,
     postId,
 }: {
     likesCount: number;
     commentsCount: number;
-    userId: string;
     isLiked: boolean;
     postId: string;
 }) {
     const router = useRouter();
     const handleLike = async () => {
-        if (!userId) {
-            router.push('/login');
+        const result = await handleLikePost(postId);
+        if (result.isSuccess) {
+            toast.success(result.message);
         } else {
-            const result = await handleLikePost(postId, userId);
-            if (result.isSuccess) {
-                toast.success(result.message);
-            } else {
-                toast.error(result.error || 'Đã có lỗi xảy ra');
-            }
-            router.refresh();
+            toast.error(result.message || 'Đã có lỗi xảy ra');
         }
+        router.refresh();
     };
 
     const handleClick = (event: any) => {

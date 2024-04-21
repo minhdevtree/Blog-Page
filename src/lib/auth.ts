@@ -14,7 +14,6 @@ const login = async (credentials: any) => {
         });
 
         if (!user) {
-            // throw new Error('No user found');
             return null;
         }
 
@@ -24,13 +23,11 @@ const login = async (credentials: any) => {
         );
 
         if (!isPasswordValid) {
-            // throw new Error('Password is invalid');
             return null;
         }
-
-        return user;
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
     } catch (err) {
-        // throw new Error('Error logging in');
         return null;
     }
 };
@@ -52,7 +49,15 @@ export const {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
         CredentialsProvider({
-            async authorize(credentials: any) {
+            name: 'Credentials',
+            credentials: {
+                email: { label: 'email', type: 'email' },
+                password: { label: 'password', type: 'password' },
+            },
+            async authorize(credentials) {
+                if (!credentials.email || !credentials.password) {
+                    return null;
+                }
                 try {
                     const user = await login(credentials);
                     return user;

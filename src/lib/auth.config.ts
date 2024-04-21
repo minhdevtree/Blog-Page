@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 
 export const authConfig = {
+    // adapter: PrismaAdapter(prisma),
     page: {
         signIn: '/login',
     },

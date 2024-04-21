@@ -8,6 +8,7 @@ import { HeartIcon } from '@radix-ui/react-icons';
 import PostCommentLike from './post-comment-like';
 import PostCommentChild from './post-comment-child';
 import PostCommentReply from './post-comment-reply';
+import { isLikedComment } from '@/lib/data';
 
 export default async function PostCommentCard({
     comment,
@@ -22,16 +23,7 @@ export default async function PostCommentCard({
     child?: boolean;
     onlyParent?: boolean;
 }) {
-    let isLiked = false;
-    if (session?.user?.id) {
-        isLiked =
-            (await prisma.postCommentLike.findFirst({
-                where: {
-                    userId: session?.user?.id,
-                    postCommentId: comment.id,
-                },
-            })) !== null;
-    }
+    const isLiked = await isLikedComment(comment.id);
 
     return (
         <>
@@ -70,7 +62,6 @@ export default async function PostCommentCard({
                             <Separator className="my-2" />
                             <div className="flex items-center gap-5">
                                 <PostCommentLike
-                                    session={session}
                                     commentId={comment.id}
                                     isLiked={isLiked}
                                 />

@@ -1,3 +1,4 @@
+import { auth } from '@/lib/auth';
 import { ApiRequestInfo } from '@/lib/define';
 import getClientIp from 'get-client-ip';
 import { NextRequest, NextResponse } from 'next/server';
@@ -12,14 +13,16 @@ const apiRequestInfo = {
 } as ApiRequestInfo;
 
 export const GET = async (request: NextRequest) => {
+    const session = await auth();
+    apiRequestInfo.clientIp =
+        request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
     try {
-        // Get client IP
-        const ip = getClientIp(request);
-        apiRequestInfo.clientIp = ip || 'Unknown';
-
         return NextResponse.json({
             apiRequestInfo,
-            data: { message: 'Welcome to my blog' },
+            data: {
+                email: session?.user?.email || 'Not login yet',
+                message: 'Welcome to my blog',
+            },
         });
     } catch (err) {
         return NextResponse.json(

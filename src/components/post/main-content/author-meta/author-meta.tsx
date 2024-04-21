@@ -1,6 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Heart, MessageCircle, SquarePen, UserRoundPlus } from 'lucide-react';
 import Author from './author';
 import PostTime from './post-time';
 import { AuthorPostDetail } from '@/lib/define';

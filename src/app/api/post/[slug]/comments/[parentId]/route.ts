@@ -125,8 +125,8 @@ export const GET = async (
         });
 
         // Get client IP
-        const ip = getClientIp(request);
-        apiRequestInfo.clientIp = ip || 'Unknown';
+        apiRequestInfo.clientIp =
+            request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
         return NextResponse.json({
             apiRequestInfo,
