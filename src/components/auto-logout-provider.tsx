@@ -1,6 +1,6 @@
 'use client';
 import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 
 export interface AutoLogoutProviderProps {
@@ -20,6 +20,7 @@ export function AutoLogoutProvider({
     children,
 }: PropsWithChildren<AutoLogoutProviderProps>) {
     const router = useRouter();
+    const pathname = usePathname();
     const [lastActivity, setLastActivity] = useState(new Date().getTime());
     const { data: session, status } = useSession({ required: requireSession });
 
@@ -112,7 +113,10 @@ export function AutoLogoutProvider({
                 }
 
                 signOut({ redirect: false }).then(() => {
-                    router.push('/login?message=session-expired');
+                    router.push(
+                        `/login?message=session-expired&callbackUrl=${pathname}`
+                    );
+                    router.refresh();
                 });
                 return true;
             }
@@ -120,8 +124,12 @@ export function AutoLogoutProvider({
 
         if (lastActivity + timeoutMs < now) {
             if (debug) console.log('User inactive======', lastActivity, now);
+
             signOut({ redirect: false }).then(() => {
-                router.push('/login?message=user-inactive');
+                router.push(
+                    `/login?message=user-inactive&callbackUrl=${pathname}`
+                );
+                router.refresh();
             });
             return true;
         }

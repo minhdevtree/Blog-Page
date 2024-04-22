@@ -1,20 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import {
     Sheet,
-    SheetClose,
     SheetContent,
     SheetDescription,
-    SheetFooter,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
-import { auth } from '@/lib/auth';
-import { getUserByEmail } from '@/lib/data';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { CategoryListMobile } from './category-list-mobile';
@@ -51,7 +45,7 @@ export function SideBarMobile({
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="outline">
+                <Button variant="hidden">
                     <HamburgerMenuIcon className="w-5 h-5" />
                 </Button>
             </SheetTrigger>

@@ -3,11 +3,12 @@ import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import { StatusType } from '@prisma/client';
 import { getDateFormatted } from '@/lib/utils';
+import { auth } from '@/lib/auth';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
-    apiName: 'Get post',
+    apiName: 'Get post comment',
     method: 'GET',
     requestUrl: '/api/post/[postId]/comments',
     clientIp: 'Unknown',

@@ -5,8 +5,15 @@ import axios from 'axios';
 import { signIn, signOut } from './auth';
 import { RegisterFormSchema, loginFormSchema } from './form-schema';
 import prisma from '@/lib/prisma';
-import { AuthError } from 'next-auth';
 import { cookies } from 'next/headers';
+import {
+    AccountNotExistsError,
+    EmailNotVerifiedError,
+    InvalidLoginError,
+    UnauthorizedError,
+} from './errors';
+import { isRedirectError } from 'next/dist/client/components/redirect';
+import { AuthError, CredentialsSignin } from 'next-auth';
 
 axios.defaults.baseURL = process.env.API_URL;
 
@@ -29,17 +36,50 @@ export const login = async (formData: z.infer<typeof loginFormSchema>) => {
             email,
             password,
         });
-    } catch (error: any) {
-        if (error instanceof AuthError) {
-            switch (error.type) {
-                case 'CredentialsSignin':
+    } catch (error) {
+        if (isRedirectError(error)) {
+            throw error;
+        }
+        if (error instanceof CredentialsSignin) {
+            switch (error.code) {
+                case 'email_not_verified':
+                    return { error: 'Email chưa được xác minh' };
+                case 'account_not_exists':
+                    return { error: 'Tài khoản không tồn tại' };
+                case 'invalid_login':
                     return { error: 'Tài khoản hoặc mật khẩu không chính xác' };
-                case 'CredentialsSignin':
-                    throw error;
+                case 'unauthorized':
+                    return { error: 'Tài khoản đã bị khóa' };
                 default:
                     return { error: 'Đã có lỗi xảy ra' };
             }
+        } else {
+            return { error: 'Đã có lỗi xảy ra' };
         }
+        // if (error instanceof EmailNotVerifiedError) {
+        //     return { error: 'Email chưa được xác minh' };
+        // }
+        // if (error instanceof AccountNotExistsError) {
+        //     return { error: 'Tài khoản không tồn tại' };
+        // }
+        // if (error instanceof InvalidLoginError) {
+        //     return { error: 'Tài khoản hoặc mật khẩu không chính xác' };
+        // }
+        // if (error instanceof UnauthorizedError) {
+        //     return { error: 'Tài khoản đã bị khóa' };
+        // }
+        // return { error: 'Đã có lỗi xảy ra' };
+        // if (error instanceof AuthError) {
+        //     switch (error.type) {
+        //         case 'CredentialsSignin':
+        //             console.log(error);
+        //             return { error: 'Tài khoản hoặc mật khẩu không chính xác' };
+        //         case 'CredentialsSignin':
+        //             throw error;
+        //         default:
+        //             return { error: 'Đã có lỗi xảy ra' };
+        //     }
+        // }
     }
 };
 
@@ -130,20 +170,32 @@ export const handleCommentPost = async (
     content: string,
     parentId?: string
 ) => {
-    try {
-        await prisma.postComment.create({
-            data: {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    const result = await axios
+        .post(
+            `/post/${postId}/comment`,
+            {
                 content,
-                userId,
-                postId,
                 parentId,
             },
+            {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            }
+        )
+        .then(response => {
+            if (response.data.data.error) {
+                return { isSuccess: false, message: response.data.data.error };
+            }
+            return { isSuccess: true, message: response.data.data.message };
+        })
+        .catch(error => {
+            return {
+                isSuccess: false,
+                message: error.response.data.data.error,
+            };
         });
-        return { isSuccess: true, message: 'Đã bình luận bài viết' };
-    } catch {
-        return {
-            isSuccess: false,
-            error: 'Đã xảy ra lỗi khi bình luận bài viết',
-        };
-    }
+
+    return result;
 };

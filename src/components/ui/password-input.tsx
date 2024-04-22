@@ -1,41 +1,41 @@
-"use client";
+'use client';
 
-import { forwardRef, useState } from "react";
-import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { Button } from "@/components/ui/button";
-import { Input, InputProps } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { forwardRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input, InputProps } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { Eye, EyeOff } from 'lucide-react';
 
 const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, ...props }, ref) => {
-    const [showPassword, setShowPassword] = useState(false);
+    ({ className, ...props }, ref) => {
+        const [showPassword, setShowPassword] = useState(false);
 
-    return (
-      <div className="relative">
-        <Input
-          type={showPassword ? "text" : "password"}
-          className={cn("hide-password-toggle pr-10", className)}
-          ref={ref}
-          {...props}
-        />
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-          onClick={() => setShowPassword((prev) => !prev)}
-        >
-          {showPassword ? (
-            <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <EyeNoneIcon className="h-4 w-4" aria-hidden="true" />
-          )}
-          <span className="sr-only">
-            {showPassword ? "Hide password" : "Show password"}
-          </span>
-        </Button>
+        return (
+            <div className="relative">
+                <Input
+                    type={showPassword ? 'text' : 'password'}
+                    className={cn('hide-password-toggle pr-10', className)}
+                    ref={ref}
+                    {...props}
+                />
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(prev => !prev)}
+                >
+                    {showPassword ? (
+                        <Eye className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                        <EyeOff className="h-5 w-5" aria-hidden="true" />
+                    )}
+                    <span className="sr-only">
+                        {showPassword ? 'Hide password' : 'Show password'}
+                    </span>
+                </Button>
 
-        <style>{`
+                <style>{`
 					.hide-password-toggle::-ms-reveal,
 					.hide-password-toggle::-ms-clear {
 						visibility: hidden;
@@ -43,11 +43,11 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(
 						display: none;
 					}
 				`}</style>
-      </div>
-    );
-  },
+            </div>
+        );
+    }
 );
 
-PasswordInput.displayName = "PasswordInput";
+PasswordInput.displayName = 'PasswordInput';
 
 export { PasswordInput };

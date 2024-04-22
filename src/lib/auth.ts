@@ -1,35 +1,41 @@
-import NextAuth from 'next-auth';
+import NextAuth, { CredentialsSignin } from 'next-auth';
 import GitHub from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcrypt-ts';
 import prisma from '@/lib/prisma';
 import { authConfig } from './auth.config';
-import { LoginType } from '@prisma/client';
+import { LoginType, StatusType } from '@prisma/client';
+import {
+    AccountNotExistsError,
+    InvalidLoginError,
+    UnauthorizedError,
+} from './errors';
 
 const login = async (credentials: any) => {
-    try {
-        const user = await prisma.user.findUnique({
-            where: { email: credentials.email },
-        });
+    const user = await prisma.user.findUnique({
+        where: { email: credentials.email },
+    });
 
-        if (!user) {
-            return null;
-        }
-
-        const isPasswordValid = await compare(
-            credentials.password,
-            user.password || ''
-        );
-
-        if (!isPasswordValid) {
-            return null;
-        }
-        const { password, ...userWithoutPassword } = user;
-        return userWithoutPassword;
-    } catch (err) {
-        return null;
+    if (!user) {
+        throw new AccountNotExistsError();
     }
+
+    if (user.status === StatusType.BANNED) {
+        throw new UnauthorizedError();
+    }
+
+    const isPasswordValid = await compare(
+        credentials.password,
+        user.password || ''
+    );
+
+    if (!isPasswordValid) {
+        throw new InvalidLoginError();
+    }
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
 };
 
 export const {
@@ -59,22 +65,14 @@ export const {
                 if (!credentials.email || !credentials.password) {
                     return null;
                 }
-                try {
-                    const user = await login(credentials);
-                    return user;
-                } catch (err) {
-                    console.log(err);
-                    return null;
-                }
+                const user = await login(credentials);
+                return user;
             },
         }),
     ],
     session: {
         strategy: 'jwt',
-        maxAge: parseInt(
-            process.env.NEXT_PUBLIC_SESSION_MAX_AGE || '864000',
-            10
-        ),
+        maxAge: +(process.env.NEXT_PUBLIC_SESSION_MAX_AGE || 864000),
     },
 
     callbacks: {
@@ -113,6 +111,8 @@ export const {
                         });
 
                         user = { ...user, ...newUser };
+                    } else if (githubUser.status === StatusType.BANNED) {
+                        return '/unauthorized';
                     } else {
                         user = { ...user, ...githubUser };
                     }
@@ -130,7 +130,7 @@ export const {
 
                     if (!googleUser) {
                         if (!profile?.email) {
-                            return '/unauthorized';
+                            return '/unauthorized?error=account_banned';
                         }
 
                         const newUser = await prisma.user.create({
@@ -152,6 +152,8 @@ export const {
                         });
 
                         user = { ...user, ...newUser };
+                    } else if (googleUser.status === StatusType.BANNED) {
+                        return '/unauthorized?error=account_banned';
                     } else {
                         user = { ...googleUser };
                     }
