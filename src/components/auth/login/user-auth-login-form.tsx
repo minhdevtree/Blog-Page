@@ -24,12 +24,13 @@ import { login } from '@/lib/action';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function UserAuthLoginForm() {
+export default function UserAuthLoginForm({ message }: { message?: string }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [loginResult, setLoginResult] = useState<
         { error?: string; isSuccess?: boolean } | undefined
     >(undefined);
+    const [isSessionExpired, setIsSessionExpired] = useState(message);
     const searchParams = useSearchParams();
     const callbackUrl = searchParams.get('callbackUrl');
     const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -44,6 +45,7 @@ export default function UserAuthLoginForm() {
 
         const result = await login(values);
         if (result?.error) {
+            setIsSessionExpired(undefined);
             setLoginResult(result);
         } else {
             setLoginResult({ isSuccess: true });
@@ -60,6 +62,17 @@ export default function UserAuthLoginForm() {
                     <ExclamationTriangleIcon className="h-4 w-4" />
                     <AlertTitle>Lỗi</AlertTitle>
                     <AlertDescription>{loginResult?.error}</AlertDescription>
+                </Alert>
+            )}
+            {isSessionExpired && (
+                <Alert variant="destructive">
+                    <ExclamationTriangleIcon className="h-4 w-4" />
+                    <AlertTitle>Thông báo</AlertTitle>
+                    <AlertDescription>
+                        {message === 'session-expired'
+                            ? 'Phiên đăng nhập hết hạn'
+                            : 'Treo máy quá lâu'}
+                    </AlertDescription>
                 </Alert>
             )}
             <Form {...form}>

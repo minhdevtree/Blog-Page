@@ -8,7 +8,11 @@ export const metadata: Metadata = {
     description: 'Đăng nhập vào tài khoản của bạn',
 };
 
-export default function LoginPage() {
+export default function LoginPage({
+    searchParams,
+}: {
+    searchParams: { message?: string };
+}) {
     return (
         <>
             <div className="flex flex-col space-y-2 text-center">
@@ -24,7 +28,7 @@ export default function LoginPage() {
                         </div>
                     }
                 >
-                    <UserAuthLoginForm />
+                    <UserAuthLoginForm message={searchParams.message} />
                 </Suspense>
                 <Suspense
                     fallback={

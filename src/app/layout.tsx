@@ -7,6 +7,8 @@ import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider/theme-provider';
 import { Suspense } from 'react';
 import FullPageLoadingOverlay from '@/components/shared/full-page-loading-overlay';
+import { AutoLogoutProvider } from '@/components/auto-logout-provider';
+import Providers from '@/components/providers';
 
 const fontSans = FontSans({
     subsets: ['latin'],
@@ -34,18 +36,22 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 )}
             >
                 <Suspense fallback={<FullPageLoadingOverlay />}>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <div vaul-drawer-wrapper="">
-                            <div className="relative flex min-h-screen flex-col bg-background">
-                                {children}
-                            </div>
-                        </div>
-                    </ThemeProvider>
+                    <Providers>
+                        <AutoLogoutProvider>
+                            <ThemeProvider
+                                attribute="class"
+                                defaultTheme="system"
+                                enableSystem
+                                disableTransitionOnChange
+                            >
+                                <div vaul-drawer-wrapper="">
+                                    <div className="relative flex min-h-screen flex-col bg-background">
+                                        {children}
+                                    </div>
+                                </div>
+                            </ThemeProvider>
+                        </AutoLogoutProvider>
+                    </Providers>
                 </Suspense>
                 <Toaster />
             </body>

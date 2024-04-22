@@ -39,6 +39,7 @@ export const {
     signOut,
 } = NextAuth({
     ...authConfig,
+    secret: `${process.env.AUTH_SECRET}`,
     providers: [
         GitHub({
             clientId: process.env.GITHUB_CLIENT_ID!,
@@ -70,8 +71,12 @@ export const {
     ],
     session: {
         strategy: 'jwt',
+        maxAge: parseInt(
+            process.env.NEXT_PUBLIC_SESSION_MAX_AGE || '864000',
+            10
+        ),
     },
-    secret: process.env.AUTH_SECRET,
+
     callbacks: {
         async signIn({ user, account, profile }) {
             if (account?.provider === 'github') {
@@ -84,7 +89,7 @@ export const {
 
                     if (!githubUser) {
                         if (!profile?.email) {
-                            return false;
+                            return '/unauthorized';
                         }
 
                         const newUser = await prisma.user.create({
@@ -112,7 +117,7 @@ export const {
                         user = { ...user, ...githubUser };
                     }
                 } catch (err) {
-                    return false;
+                    return '/unauthorized';
                 }
             }
             if (account?.provider === 'google') {
@@ -125,7 +130,7 @@ export const {
 
                     if (!googleUser) {
                         if (!profile?.email) {
-                            return false;
+                            return '/unauthorized';
                         }
 
                         const newUser = await prisma.user.create({
@@ -151,7 +156,7 @@ export const {
                         user = { ...googleUser };
                     }
                 } catch (err) {
-                    return false;
+                    return '/unauthorized';
                 }
             }
             if (user) {
@@ -163,6 +168,10 @@ export const {
             return true;
         },
         async redirect({ url, baseUrl }) {
+            // Allows relative callback URLs
+            if (url.startsWith('/')) return `${baseUrl}${url}`;
+            // Allows callback URLs on the same origin
+            else if (new URL(url).origin === baseUrl) return url;
             return baseUrl;
         },
         ...authConfig.callbacks,

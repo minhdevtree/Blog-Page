@@ -25,6 +25,7 @@ export const POST = async (
         request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
     const session = await auth();
+    console.log(session);
     if (!session) {
         return NextResponse.json(
             {

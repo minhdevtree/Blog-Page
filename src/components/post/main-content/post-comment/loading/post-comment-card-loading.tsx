@@ -8,13 +8,13 @@ export default function PostCommentCardLoading() {
             <Card className="p-4 w-full">
                 <div className="flex gap-2">
                     <div className="text-base font-bold leading-none text-sky-500">
-                        <Skeleton className="h-[0.875rem] w-[100px]" />
+                        <Skeleton className="h-[0.875rem] w-[50px] md:w-[100px]" />
                     </div>
                     <div className="text-base leading-none text-muted-foreground">
-                        <Skeleton className="h-[0.875rem] w-[80px]" />
+                        <Skeleton className="h-[0.875rem] w-[40px] md:w-[80px]" />
                     </div>
                     <div className="text-base leading-none text-muted-foreground">
-                        <Skeleton className="h-[0.875rem] w-[80px]" />
+                        <Skeleton className="h-[0.875rem] w-[40px] md:w-[80px]" />
                     </div>
                 </div>
                 <div className="mt-3">
