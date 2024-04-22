@@ -2,8 +2,9 @@ import { auth } from '@/lib/auth';
 import { ApiRequestInfo } from '@/lib/define';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getDateFormatted } from '@/lib/utils';
 
-const currentTime = new Date().toISOString();
+const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
     apiName: 'Like Post',
@@ -17,6 +18,11 @@ export const POST = async (
     { params }: { params: { id: string } }
 ) => {
     const { id } = params;
+
+    apiRequestInfo.method = 'POST';
+
+    apiRequestInfo.clientIp =
+        request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
     const session = await auth();
     if (!session) {
@@ -82,6 +88,9 @@ export const GET = async (
     { params }: { params: { id: string } }
 ) => {
     const { id } = params;
+
+    apiRequestInfo.clientIp =
+        request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
     const session = await auth();
     if (!session) {

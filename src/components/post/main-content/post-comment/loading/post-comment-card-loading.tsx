@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function PostCommentCardLoading() {
     return (
         <div className="flex items-start gap-5 my-5">
-            <Skeleton className=" border-solid border-sky-500 border-2 w-[45px] h-[45px] rounded-full" />
+            <Skeleton className=" border-solid border-sky-500 border-2 w-[35px] h-[35px] md:w-[45px] md:h-[45px] rounded-full" />
             <Card className="p-4 w-full">
                 <div className="flex gap-2">
                     <div className="text-base font-bold leading-none text-sky-500">

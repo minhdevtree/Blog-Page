@@ -2,8 +2,9 @@ import { auth } from '@/lib/auth';
 import { ApiRequestInfo } from '@/lib/define';
 import getClientIp from 'get-client-ip';
 import { NextRequest, NextResponse } from 'next/server';
+import { getDateFormatted } from '@/lib/utils';
 
-const currentTime = new Date().toISOString();
+const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
     apiName: 'Get Welcome Message',

@@ -5,7 +5,7 @@ import { SquarePen, UserRoundPlus } from 'lucide-react';
 export default function Author({ author }: { author: AuthorPostDetail }) {
     return (
         <div className="flex gap-2">
-            <Avatar className="border-solid border-sky-500 border-2 w-[45px] h-[45px]">
+            <Avatar className="border-solid border-sky-500 border-2 w-[35px] h-[35px] md:w-[45px] md:h-[45px]">
                 <AvatarImage src={author.img} alt="avatar" />
                 <AvatarFallback>A</AvatarFallback>
             </Avatar>
@@ -15,7 +15,7 @@ export default function Author({ author }: { author: AuthorPostDetail }) {
                         <p className="text-base font-bold leading-none text-sky-500">
                             {author.fullName}
                         </p>
-                        <p className="text-base leading-none text-muted-foreground">
+                        <p className="text-base leading-none text-muted-foreground max-md:hidden">
                             @{author.username}
                         </p>
                     </div>

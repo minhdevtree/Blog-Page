@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
-import getClientIp from 'get-client-ip';
 import { StatusType } from '@prisma/client';
-import { create } from 'domain';
+import { getDateFormatted } from '@/lib/utils';
 
-const currentTime = new Date().toISOString();
+const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
     apiName: 'Get post',

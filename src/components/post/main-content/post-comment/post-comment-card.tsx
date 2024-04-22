@@ -28,7 +28,7 @@ export default async function PostCommentCard({
     return (
         <>
             <div className="flex items-start gap-2 md:gap-5 my-5">
-                <Avatar className="border-solid border-sky-500 border-2 w-[45px] h-[45px]">
+                <Avatar className="border-solid border-sky-500 border-2 w-[35px] h-[35px] md:w-[45px] md:h-[45px]">
                     <AvatarImage
                         src={comment.user.img || '/avatar/noavatar.png'}
                         alt="avatar"
@@ -49,7 +49,7 @@ export default async function PostCommentCard({
                         <p className="text-base font-bold leading-none text-sky-500">
                             {comment.user.fullName}
                         </p>
-                        <p className="text-base leading-none text-muted-foreground">
+                        <p className="text-base leading-none text-muted-foreground max-md:hidden">
                             @{comment.user.username}
                         </p>
                         <p className="text-base leading-none text-muted-foreground">

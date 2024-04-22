@@ -13,7 +13,7 @@ export default function PostCommentChild({
     session: any;
 }) {
     return (
-        <div className="ml-24">
+        <div className="ml-12 md:ml-24">
             <Suspense fallback={<PostCommentListLoading />}>
                 <PostCommentChildList
                     postId={postId}

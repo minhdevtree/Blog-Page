@@ -1,10 +1,10 @@
 import { ApiRequestInfo } from '@/lib/define';
 import { RegisterFormSchema } from '@/lib/form-schema';
 import { hashPassword } from '@/lib/utils';
-import getClientIp from 'get-client-ip';
 import { NextRequest, NextResponse } from 'next/server';
+import { getDateFormatted } from '@/lib/utils';
 
-const currentTime = new Date().toISOString();
+const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
     apiName: 'Register user',

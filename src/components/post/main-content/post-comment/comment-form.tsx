@@ -62,7 +62,7 @@ export default function CommentForm({
     return (
         <div className="mt-5 ">
             <div className="flex items-start justify-start gap-5">
-                <Avatar className="border-solid border-sky-500 border-2 w-[45px] h-[45px]">
+                <Avatar className="border-solid border-sky-500 border-2 w-[35px] h-[35px] md:w-[45px] md:h-[45px]">
                     <AvatarImage
                         src={session?.user.img || '/avatar/noavatar.png'}
                         alt="avatar"
