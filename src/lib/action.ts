@@ -106,7 +106,6 @@ export const register = async (
             return { isSuccess: true, error: '' };
         })
         .catch(error => {
-            console.log(error.response.data);
             return { isSuccess: false, error: error.response.data.message };
         });
     return response;
@@ -166,7 +165,6 @@ export const handleLikeComment = async (commentId: string) => {
 
 export const handleCommentPost = async (
     postId: string,
-    userId: string,
     content: string,
     parentId?: string
 ) => {

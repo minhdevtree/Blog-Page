@@ -3,6 +3,7 @@ import { ApiRequestInfo } from '@/lib/define';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getDateFormatted } from '@/lib/utils';
+import { UserLimitType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -34,6 +35,27 @@ export const POST = async (
             { status: 401 }
         );
     }
+
+    const isLimit =
+        (await prisma.userLimit.findFirst({
+            where: {
+                userId: session?.user?.id,
+                limit: UserLimitType.LIKE_POST,
+            },
+        })) !== null;
+
+    if (isLimit) {
+        return NextResponse.json(
+            {
+                apiRequestInfo,
+                data: {
+                    error: 'Tài khoản của bạn đã bị hạn chế thích bài viết',
+                },
+            },
+            { status: 403 }
+        );
+    }
+
     try {
         const userId = session?.user?.id;
         const like = await prisma.like.findFirst({

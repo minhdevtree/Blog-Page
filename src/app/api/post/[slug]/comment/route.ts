@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
 import { auth } from '@/lib/auth';
+import { UserLimitType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -30,6 +31,27 @@ export const POST = async (
             { status: 401 }
         );
     }
+
+    const isLimit =
+        (await prisma.userLimit.findFirst({
+            where: {
+                userId: session?.user?.id,
+                limit: UserLimitType.COMMENT,
+            },
+        })) !== null;
+
+    if (isLimit) {
+        return NextResponse.json(
+            {
+                apiRequestInfo,
+                data: {
+                    error: 'Tài khoản của bạn đã bị hạn chế bình luận bài viết',
+                },
+            },
+            { status: 403 }
+        );
+    }
+
     const { slug: postId } = params;
     const body = await request.json();
     const { content, parentId } = body;

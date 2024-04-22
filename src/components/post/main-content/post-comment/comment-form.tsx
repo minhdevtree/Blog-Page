@@ -45,12 +45,11 @@ export default function CommentForm({
 
         const result = await handleCommentPost(
             postId,
-            session.user.id,
             values.content,
             parentId
         );
-        if (result?.error) {
-            toast.error(result.error);
+        if (!result.isSuccess) {
+            toast.error(result.message);
         } else {
             toast.success(result.message);
             form.reset();

@@ -30,6 +30,7 @@ model User {
   posts       Post[]
   comments    PostComment[]
   postCommentLikes PostCommentLike[]
+  userLimits  UserLimit[]
 }
 
 model Post {
@@ -135,6 +136,14 @@ model Follow {
   following   User     @relation("FollowingToUser", fields: [followingId], references: [id])
 }
 
+model UserLimit {
+  id        String     @id @default(cuid())
+  userId    String
+  limit     UserLimitType
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id])
+}
+
 enum RoleType {
   USER
   ADMIN
@@ -151,6 +160,15 @@ enum StatusType {
   ACTIVE
   BANNED
   DELETED
+}
+
+enum UserLimitType {
+  UP_POST
+  COMMENT
+  LIKE_POST
+  LIKE_COMMENT
+  BOOKMARK
+  FOLLOW
 }
 
 enum PublishedType {
