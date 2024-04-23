@@ -11,6 +11,8 @@ export default function UnauthorizedPage({
         switch (error) {
             case 'account_banned':
                 return 'Tài khoản của bạn đã bị cấm truy cập.';
+            case 'account_deleted':
+                return 'Tài khoản của bạn đã bị xóa.';
             default:
                 return 'Nếu bạn nghĩ đây là một lỗi, vui lòng liên hệ với admin.';
         }

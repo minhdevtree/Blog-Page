@@ -36,6 +36,9 @@ export async function middleware(req: NextRequest) {
     if (pathname.startsWith('/register') && session?.user) {
         return Response.redirect(new URL(callbackUrl, req.nextUrl));
     }
+    if (pathname.startsWith('/unauthorized') && session?.user) {
+        return Response.redirect(new URL(callbackUrl, req.nextUrl));
+    }
 
     // ONLY AUTHENTICATED USERS CAN ACCESS CERTAIN ROUTES
     if (routeRequiresSession(pathname)) {

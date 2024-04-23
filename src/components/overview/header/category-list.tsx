@@ -48,13 +48,17 @@ export default function CategoryList({
                                 </li>
                                 {category.children.map(
                                     (subcategory: Subcategory) => (
-                                        <ListItem
+                                        <Link
                                             key={subcategory.slug}
                                             href={`/posts/category/${subcategory.slug}`}
-                                            title={subcategory.title}
                                         >
-                                            {subcategory.content}
-                                        </ListItem>
+                                            <ListItem
+                                                key={subcategory.slug}
+                                                title={subcategory.title}
+                                            >
+                                                {subcategory.content}
+                                            </ListItem>
+                                        </Link>
                                     )
                                 )}
                             </ul>

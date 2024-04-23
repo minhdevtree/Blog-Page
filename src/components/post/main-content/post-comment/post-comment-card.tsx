@@ -9,6 +9,7 @@ import PostCommentLike from './post-comment-like';
 import PostCommentChild from './post-comment-child';
 import PostCommentReply from './post-comment-reply';
 import { isLikedComment } from '@/lib/data';
+import CommentText from '@/components/shared/comment-text';
 
 export default async function PostCommentCard({
     comment,
@@ -56,7 +57,9 @@ export default async function PostCommentCard({
                             {getFormatDistanceToNow(comment.createdAt)}
                         </p>
                     </div>
-                    <div className="mt-3">{comment.content}</div>
+                    <div className="mt-3">
+                        <CommentText comment={comment.content} />
+                    </div>
                     {session && (
                         <>
                             <Separator className="my-2" />

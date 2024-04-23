@@ -12,9 +12,12 @@ export default function PostTime({
 }) {
     return (
         <div className="text-base leading-none text-muted-foreground flex flex-col items-end justify-between gap-2">
-            <div>
+            <div className="max-sm:hidden">
                 Đã đăng vào {getFormatDistanceToNow(publishedAt)} -{' '}
                 {getDateFormatted(publishedAt)}
+            </div>
+            <div className="sm:hidden">
+                Đã đăng vào {getDateFormatted(publishedAt)}
             </div>
             <div className="flex gap-4">
                 <div className="flex gap-2 items-center">

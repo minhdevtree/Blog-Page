@@ -6,14 +6,9 @@ import { signIn, signOut } from './auth';
 import { RegisterFormSchema, loginFormSchema } from './form-schema';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
-import {
-    AccountNotExistsError,
-    EmailNotVerifiedError,
-    InvalidLoginError,
-    UnauthorizedError,
-} from './errors';
+
 import { isRedirectError } from 'next/dist/client/components/redirect';
-import { AuthError, CredentialsSignin } from 'next-auth';
+import { CredentialsSignin } from 'next-auth';
 
 axios.defaults.baseURL = process.env.API_URL;
 
@@ -197,3 +192,18 @@ export const handleCommentPost = async (
 
     return result;
 };
+
+export async function getUserStatus() {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    try {
+        return await axios
+            .get(`/user/status`, {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            })
+            .then(res => res.data.data.status as string);
+    } catch (error) {
+        return 'UNAUTHENTICATED';
+    }
+}
