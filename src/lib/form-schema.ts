@@ -12,6 +12,19 @@ export const postCommentSchema = z.object({
         .max(500, { message: 'Nội dung bình luận tối đa 500 kí tự' }),
 });
 
+export const sendEmailSchema = z.object({
+    email: z.string().email({ message: 'Email phải có định dạng chuẩn' }),
+    subject: z
+        .string()
+        .min(1, { message: 'Chủ đề không được để trống' })
+        .max(100, { message: 'Chủ đề tối đa 100 kí tự' }),
+    content: z
+        .string()
+        .min(1, { message: 'Nội dung không được để trống' })
+        .max(500, { message: 'Nội dung tối đa 500 kí tự' }),
+    template: z.string().optional(),
+});
+
 export const RegisterFormSchema = z.object({
     fullName: z
         .string({ required_error: 'Vui lòng điền họ tên' })

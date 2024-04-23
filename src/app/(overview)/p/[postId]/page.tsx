@@ -1,9 +1,7 @@
 import CommentChildList from '@/components/overview/p/comment-child-list';
-import PostsLoading from '@/components/overview/posts/loading/posts-loading';
-import Posts from '@/components/overview/posts/posts';
 import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
-import { getPostChildComments } from '@/lib/data';
-import { BreadItem, SearchCommentParams, SearchPostParams } from '@/lib/define';
+
+import { BreadItem, SearchCommentParams } from '@/lib/define';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import prisma from '@/lib/prisma';

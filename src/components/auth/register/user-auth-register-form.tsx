@@ -1,6 +1,6 @@
 'use client';
 import {
-    CheckCircledIcon,
+    EnvelopeOpenIcon,
     ExclamationTriangleIcon,
 } from '@radix-ui/react-icons';
 import * as React from 'react';
@@ -24,7 +24,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RegisterFormSchema } from '@/lib/form-schema';
 import { Icons } from '@/components/icons/icons';
 import { register } from '@/lib/action';
-// import { register } from '@/lib/action';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -70,11 +69,11 @@ export function UserAuthRegisterForm({
     if (success) {
         return (
             <Alert>
-                <CheckCircledIcon className="h-4 w-4 text-sky-500" />
+                <EnvelopeOpenIcon className="h-4 w-4 text-sky-500" />
                 <AlertTitle className="text-sky-500">Chúc mừng</AlertTitle>
                 <AlertDescription className="text-sky-500">
-                    Tài khoản của bạn đã được tạo thành công. Đăng nhập để tiếp
-                    tục.
+                    Tài khoản của bạn đã được tạo thành công. Kiểm tra email để
+                    kích hoạt tài khoản.
                 </AlertDescription>
             </Alert>
         );

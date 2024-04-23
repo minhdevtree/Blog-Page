@@ -17,7 +17,7 @@ model User {
   password    String?
   img         String        @default("/avatar/noavatar.png")
   intro       String?
-  status      StatusType    @default(ACTIVE)
+  status      StatusType    @default(NOT_ACTIVE)
   role        RoleType      @default(USER)
   loginType   LoginType     @default(LOCAL)
   createdAt   DateTime      @default(now())
@@ -31,6 +31,16 @@ model User {
   comments    PostComment[]
   postCommentLikes PostCommentLike[]
   userLimits  UserLimit[]
+  activateTokens ActivateToken[]
+}
+
+model ActivateToken {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  createdAt   DateTime  @default(now())
+  activatedAt DateTime?
+  user   User @relation(fields: [userId], references: [id])
+  userId String
 }
 
 model Post {
@@ -157,6 +167,7 @@ enum LoginType {
 }
 
 enum StatusType {
+  NOT_ACTIVE
   ACTIVE
   BANNED
   DELETED

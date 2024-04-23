@@ -39,6 +39,27 @@ export const createUrl = (
     return `${pathname}${queryString}`;
 };
 
+// export function getMailOption(
+//     email: string,
+//     subject: string,
+//     text: string,
+//     templatePath: string,
+//     replacements: { [key: string]: string }
+// ) {
+//     const __dirname = path.resolve();
+//     const filePath = path.join(__dirname, 'src/template/demo.html');
+//     const source = readFileSync(filePath, 'utf-8').toString();
+//     const template = handlebars.compile(source);
+//     const htmlToSend = template(replacements);
+//     return {
+//         from: process.env.EMAIL_NAME,
+//         to: email,
+//         subject: subject,
+//         text: text,
+//         html: htmlToSend,
+//     };
+// }
+
 // export const getSession = () => {
 //     const { data: session } = useSession();
 //     return session;

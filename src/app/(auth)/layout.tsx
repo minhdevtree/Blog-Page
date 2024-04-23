@@ -9,7 +9,7 @@ import { siteConfig } from '@/config/site';
 
 export const metadata: Metadata = {
     title: {
-        default: `Authentication | ${siteConfig.name}`,
+        default: `Xác thực | ${siteConfig.name}`,
         template: `%s | ${siteConfig.name}`,
     },
     description: 'Thực hiện xác thực người dùng tại đây',

@@ -8,6 +8,7 @@ import { authConfig } from './auth.config';
 import { LoginType, StatusType } from '@prisma/client';
 import {
     AccountNotExistsError,
+    EmailNotVerifiedError,
     InvalidLoginError,
     UnauthorizedError,
 } from './errors';
@@ -23,6 +24,10 @@ const login = async (credentials: any) => {
 
     if (user.status === StatusType.BANNED) {
         throw new UnauthorizedError();
+    }
+
+    if (user.status === StatusType.NOT_ACTIVE) {
+        throw new EmailNotVerifiedError();
     }
 
     const isPasswordValid = await compare(

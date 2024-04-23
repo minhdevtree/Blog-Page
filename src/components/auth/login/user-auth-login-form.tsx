@@ -55,6 +55,21 @@ export default function UserAuthLoginForm({ message }: { message?: string }) {
         setIsLoading(false);
     };
 
+    const handleSendEmail = async () => {
+        setIsLoading(true);
+
+        // const result = await login({
+        //     email: form.getValues('email'),
+        //     password: '',
+        // });
+        // if (result?.error) {
+        //     setLoginResult(result);
+        // } else {
+        //     setLoginResult({ isSuccess: true });
+        // }
+        setIsLoading(false);
+    };
+
     return (
         <>
             {loginResult?.error && (
@@ -63,6 +78,14 @@ export default function UserAuthLoginForm({ message }: { message?: string }) {
                     <AlertTitle>Lỗi</AlertTitle>
                     <AlertDescription>{loginResult?.error}</AlertDescription>
                 </Alert>
+            )}
+            {loginResult?.error?.includes('Email') && (
+                <Button disabled={isLoading} onClick={handleSendEmail}>
+                    {isLoading && (
+                        <Icons.spinner className=" mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Gửi email xác thực
+                </Button>
             )}
             {isSessionExpired && (
                 <Alert variant="destructive">

@@ -3,6 +3,12 @@ import { RegisterFormSchema } from '@/lib/form-schema';
 import { hashPassword } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDateFormatted } from '@/lib/utils';
+import * as handlebars from 'handlebars';
+import { welcomeTemplate } from '@/lib/template/welcome';
+import { siteConfig } from '@/config/site';
+import { transporter } from '@/config/nodemailer';
+import { randomUUID } from 'crypto';
+import prisma from '@/lib/prisma';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -71,6 +77,30 @@ export async function POST(req: NextRequest) {
         });
 
         const { password: _, ...userWithoutPassword } = newUser;
+
+        const activateToken = await prisma.activateToken.create({
+            data: {
+                userId: newUser.id,
+                token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
+            },
+        });
+
+        const template = handlebars.compile(welcomeTemplate);
+        const htmlToSend = template({
+            username,
+            siteConfigName: siteConfig.name,
+            activeLink: `${siteConfig.url}/api/auth/activate/${activateToken.token}`,
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_NAME,
+            to: email,
+            subject: `Kích hoạt tài khoản ${siteConfig.name}`,
+            text: `Chào mừng ${username} đến với ${siteConfig.name}`,
+            html: htmlToSend,
+        };
+
+        await transporter.sendMail(mailOptions);
 
         return NextResponse.json(
             {
