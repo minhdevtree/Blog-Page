@@ -10,7 +10,7 @@ const apiRequestInfo = {
     time: currentTime,
     apiName: 'Like Post',
     method: 'GET',
-    requestUrl: '/api',
+    requestUrl: '/api/comment/[id]/like',
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
@@ -26,15 +26,6 @@ export const POST = async (
         request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
     const session = await auth();
-    if (!session) {
-        return NextResponse.json(
-            {
-                apiRequestInfo,
-                data: { error: 'Bạn phải đăng nhập để thực hiện yêu cầu này' },
-            },
-            { status: 401 }
-        );
-    }
 
     const isLimit =
         (await prisma.userLimit.findFirst({
@@ -114,15 +105,6 @@ export const GET = async (
         request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
     const session = await auth();
-    if (!session) {
-        return NextResponse.json(
-            {
-                apiRequestInfo,
-                data: { error: 'Bạn phải đăng nhập để thực hiện yêu cầu này' },
-            },
-            { status: 401 }
-        );
-    }
     const isLiked =
         (await prisma.postCommentLike.findFirst({
             where: {

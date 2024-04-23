@@ -43,22 +43,23 @@ export const authConfig = {
             }
             return session;
         },
-        authorized({ auth, request }: { auth: any; request: any }) {
-            const user = auth?.user;
-            const isOnLoginPage =
-                request.nextUrl?.pathname.startsWith('/login');
-            const isOnRegisterPage =
-                request.nextUrl?.pathname.startsWith('/register');
+        // authorized({ auth, request }: { auth: any; request: any }) {
+        //     console.log('authorized', auth, request);
+        //     const user = auth?.user;
+        //     const isOnLoginPage =
+        //         request.nextUrl?.pathname.startsWith('/login');
+        //     const isOnRegisterPage =
+        //         request.nextUrl?.pathname.startsWith('/register');
 
-            // ONLY UNAUTHENTICATED USERS CAN REACH THE LOGIN PAGE
-            if (isOnLoginPage && user) {
-                return Response.redirect(new URL('/', request.nextUrl));
-            }
-            if (isOnRegisterPage && user) {
-                return Response.redirect(new URL('/', request.nextUrl));
-            }
+        //     // ONLY UNAUTHENTICATED USERS CAN REACH THE LOGIN PAGE
+        //     if (isOnLoginPage && user) {
+        //         return Response.redirect(new URL('/', request.nextUrl));
+        //     }
+        //     if (isOnRegisterPage && user) {
+        //         return Response.redirect(new URL('/', request.nextUrl));
+        //     }
 
-            return true;
-        },
+        //     return true;
+        // },
     },
 };

@@ -18,15 +18,6 @@ export const GET = async (request: NextRequest) => {
         request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
     const session = await auth();
-    if (!session) {
-        return NextResponse.json(
-            {
-                apiRequestInfo,
-                data: { error: 'Bạn phải đăng nhập để thực hiện yêu cầu này' },
-            },
-            { status: 401 }
-        );
-    }
     const user = await prisma.user.findUnique({
         where: {
             id: session?.user?.id,
