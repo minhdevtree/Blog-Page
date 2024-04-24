@@ -39,6 +39,7 @@ model ActivateToken {
   token       String    @unique
   createdAt   DateTime  @default(now())
   activatedAt DateTime?
+  type        ActivateType @default(EMAIL_VERIFY)
   user   User @relation(fields: [userId], references: [id])
   userId String
 }
@@ -195,4 +196,9 @@ enum KeyType {
   LIST_IMG
   CODE
   LINK
+}
+
+enum ActivateType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
 }

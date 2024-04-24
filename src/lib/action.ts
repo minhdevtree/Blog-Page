@@ -225,3 +225,28 @@ export async function sendEmailActivate(
             return { isSuccess: false, error: error.response.data.error };
         });
 }
+
+export async function sendEmailForgotPassword(
+    formData: z.infer<typeof sendEmailActivateSchema>
+) {
+    const { email }: z.infer<typeof sendEmailActivateSchema> = formData;
+    return await axios
+        .post('/auth/forgot-password', { email })
+        .then(res => {
+            return { isSuccess: true, error: '' };
+        })
+        .catch(error => {
+            return { isSuccess: false, error: error.response.data.error };
+        });
+}
+
+export async function resetPassword(token: string, password: string) {
+    return await axios
+        .post('/auth/forgot-password/change', { token, password })
+        .then(res => {
+            return { isSuccess: true, error: '' };
+        })
+        .catch(error => {
+            return { isSuccess: false, error: error.response.data.error };
+        });
+}

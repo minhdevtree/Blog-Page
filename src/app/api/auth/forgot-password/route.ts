@@ -7,14 +7,15 @@ import { siteConfig } from '@/config/site';
 import { transporter } from '@/config/nodemailer';
 import { randomUUID } from 'crypto';
 import prisma from '@/lib/prisma';
-import { ActivateType, StatusType } from '@prisma/client';
+import { ActivateType, LoginType, StatusType } from '@prisma/client';
+import { forgotPassword } from '@/lib/template/forgot-password';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
-    apiName: 'Resend Email Activation Link',
+    apiName: 'Forgot password input email',
     method: 'POST',
-    requestUrl: '/api/auth/activate/resend-email',
+    requestUrl: '/api/auth/forgot-password',
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
 
         let user = await prisma.user.findUnique({
             where: { email },
-            select: { id: true, username: true, status: true },
+            select: { id: true, username: true, status: true, loginType: true },
         });
 
         if (!user) {
@@ -41,11 +42,30 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        if (user.status === StatusType.ACTIVE) {
+        if (user.status === StatusType.BANNED) {
             return NextResponse.json(
                 {
                     apiRequestInfo,
-                    error: 'Tài khoản đã được kích hoạt, không thể gửi email kích hoạt',
+                    error: 'Tài khoản đã bị khóa, không thể gửi email đặt lại mật khẩu',
+                },
+                { status: 400 }
+            );
+        }
+        if (user.status === StatusType.DELETED) {
+            return NextResponse.json(
+                {
+                    apiRequestInfo,
+                    error: 'Tài khoản đã bị xóa, không thể gửi email đặt lại mật khẩu',
+                },
+                { status: 400 }
+            );
+        }
+
+        if (user.loginType !== LoginType.LOCAL) {
+            return NextResponse.json(
+                {
+                    apiRequestInfo,
+                    error: 'Tài khoản đã được đăng nhập thông qua mạng xã hội, không thể gửi email đặt lại mật khẩu',
                 },
                 { status: 400 }
             );
@@ -55,22 +75,21 @@ export async function POST(req: NextRequest) {
             data: {
                 userId: user.id,
                 token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
-                type: ActivateType.EMAIL_VERIFY,
+                type: ActivateType.PASSWORD_RESET,
             },
         });
 
-        const template = handlebars.compile(welcomeTemplate);
+        const template = handlebars.compile(forgotPassword);
         const htmlToSend = template({
-            username: user.username,
             siteConfigName: siteConfig.name,
-            activeLink: `${siteConfig.url}/api/auth/activate/${activateToken.token}?active=EMAIL_VERIFY`,
+            activeLink: `${siteConfig.url}/api/auth/activate/${activateToken.token}?active=PASSWORD_RESET`,
         });
 
         const mailOptions = {
             from: process.env.EMAIL_NAME,
             to: email,
-            subject: `Kích hoạt tài khoản ${siteConfig.name}`,
-            text: `Chào mừng ${user.username} đến với ${siteConfig.name}. Link kích hoạt tài khoản của bạn: ${siteConfig.url}/api/auth/activate/${activateToken.token}?active=EMAIL_VERIFY`,
+            subject: `Đổi mật khẩu ${siteConfig.name}`,
+            text: `Đổi mật khẩu ${siteConfig.name}. Link đổi mật khẩu của bạn: ${siteConfig.url}/api/auth/activate/${activateToken.token}?active=PASSWORD_RESET \n\n Nếu bạn không yêu cầu đổi mật khẩu, vui lòng bỏ qua email này. \n\n ${siteConfig.name} - ${siteConfig.url}`,
             html: htmlToSend,
         };
 
@@ -87,7 +106,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
             {
                 apiRequestInfo,
-                message: 'Đã có lỗi xảy ra trong khi gửi email kích hoạt',
+                error: 'Đã có lỗi xảy ra trong khi gửi email kích hoạt',
             },
             { status: 500 }
         );

@@ -20,6 +20,17 @@ export default function ActivatePage({
                 </AlertDescription>
             </Alert>
         );
+    } else if (searchParams.message === 'invalid_email') {
+        return (
+            <Alert variant="destructive">
+                <ExclamationTriangleIcon className="h-4 w-4" />
+                <AlertTitle>Lỗi</AlertTitle>
+                <AlertDescription>
+                    Email không tồn tại trong hệ thống, hoặc được đăng nhập
+                    thông qua mạng xã hội.
+                </AlertDescription>
+            </Alert>
+        );
     } else {
         return (
             <Alert variant="destructive">

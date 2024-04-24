@@ -9,6 +9,7 @@ import { siteConfig } from '@/config/site';
 import { transporter } from '@/config/nodemailer';
 import { randomUUID } from 'crypto';
 import prisma from '@/lib/prisma';
+import { ActivateType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
             data: {
                 userId: newUser.id,
                 token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
+                type: ActivateType.EMAIL_VERIFY,
             },
         });
 
@@ -89,14 +91,14 @@ export async function POST(req: NextRequest) {
         const htmlToSend = template({
             username,
             siteConfigName: siteConfig.name,
-            activeLink: `${siteConfig.url}/api/auth/activate/${activateToken.token}`,
+            activeLink: `${siteConfig.url}/api/auth/activate/${activateToken.token}?active=EMAIL_VERIFY`,
         });
 
         const mailOptions = {
             from: process.env.EMAIL_NAME,
             to: email,
             subject: `Kích hoạt tài khoản ${siteConfig.name}`,
-            text: `Chào mừng ${newUser.username} đến với ${siteConfig.name}. Link kích hoạt tài khoản của bạn: ${siteConfig.url}/api/auth/activate/${activateToken.token}`,
+            text: `Chào mừng ${newUser.username} đến với ${siteConfig.name}. Link kích hoạt tài khoản của bạn: ${siteConfig.url}/api/auth/activate/${activateToken.token}?active=EMAIL_VERIFY`,
             html: htmlToSend,
         };
 
