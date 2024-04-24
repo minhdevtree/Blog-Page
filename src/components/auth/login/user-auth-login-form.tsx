@@ -56,18 +56,7 @@ export default function UserAuthLoginForm({ message }: { message?: string }) {
     };
 
     const handleSendEmail = async () => {
-        setIsLoading(true);
-
-        // const result = await login({
-        //     email: form.getValues('email'),
-        //     password: '',
-        // });
-        // if (result?.error) {
-        //     setLoginResult(result);
-        // } else {
-        //     setLoginResult({ isSuccess: true });
-        // }
-        setIsLoading(false);
+        router.push('/send-email-activate');
     };
 
     return (

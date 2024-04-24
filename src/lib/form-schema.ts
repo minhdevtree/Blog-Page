@@ -25,6 +25,10 @@ export const sendEmailSchema = z.object({
     template: z.string().optional(),
 });
 
+export const sendEmailActivateSchema = z.object({
+    email: z.string().email({ message: 'Email phải có định dạng chuẩn' }),
+});
+
 export const RegisterFormSchema = z.object({
     fullName: z
         .string({ required_error: 'Vui lòng điền họ tên' })

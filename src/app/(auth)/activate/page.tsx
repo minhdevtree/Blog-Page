@@ -15,8 +15,8 @@ export default function ActivatePage({
                 <CheckCircledIcon className="h-4 w-4 text-sky-500" />
                 <AlertTitle className="text-sky-500">Chúc mừng</AlertTitle>
                 <AlertDescription className="text-sky-500">
-                    Tài khoản của bạn đã được tạo thành công. Đăng nhập để tiếp
-                    tục.
+                    Tài khoản của bạn đã được kích hoạt. Bạn có thể đăng nhập
+                    ngay bây giờ.
                 </AlertDescription>
             </Alert>
         );

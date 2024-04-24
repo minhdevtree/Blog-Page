@@ -17,8 +17,17 @@ const apiRequireSession = [
     '/api/post/*/like',
 ];
 
+const urlRequireUnauthenticated = ['/login', '/register', '/activate'];
+
 function routeRequiresSession(route: string) {
     return apiRequireSession.some(pattern => {
+        const regex = new RegExp('^' + pattern.split('*').join('.*') + '$');
+        return regex.test(route);
+    });
+}
+
+function routeRequiresUnauthenticated(route: string) {
+    return urlRequireUnauthenticated.some(pattern => {
         const regex = new RegExp('^' + pattern.split('*').join('.*') + '$');
         return regex.test(route);
     });
@@ -29,14 +38,8 @@ export async function middleware(req: NextRequest) {
     const { pathname, searchParams } = req.nextUrl;
     const callbackUrl = searchParams.get('callbackUrl') || '/';
 
-    // ONLY UNAUTHENTICATED USERS CAN REACH THE LOGIN PAGE
-    if (pathname.startsWith('/login') && session?.user) {
-        return Response.redirect(new URL(callbackUrl, req.nextUrl));
-    }
-    if (pathname.startsWith('/register') && session?.user) {
-        return Response.redirect(new URL(callbackUrl, req.nextUrl));
-    }
-    if (pathname.startsWith('/unauthorized') && session?.user) {
+    // ONLY UNAUTHENTICATED USERS CAN REACH CERTAIN ROUTES
+    if (routeRequiresUnauthenticated(pathname) && session?.user) {
         return Response.redirect(new URL(callbackUrl, req.nextUrl));
     }
 

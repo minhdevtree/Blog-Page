@@ -1,6 +1,4 @@
 import { ApiRequestInfo } from '@/lib/define';
-import { RegisterFormSchema } from '@/lib/form-schema';
-import { hashPassword } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
 import { getDateFormatted } from '@/lib/utils';
 import * as handlebars from 'handlebars';
@@ -9,13 +7,14 @@ import { siteConfig } from '@/config/site';
 import { transporter } from '@/config/nodemailer';
 import { randomUUID } from 'crypto';
 import prisma from '@/lib/prisma';
+import { StatusType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
-    apiName: 'Register user',
+    apiName: 'Resend Email Activation Link',
     method: 'POST',
-    requestUrl: '/api/auth/register',
+    requestUrl: '/api/auth/activate/resend-email',
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
@@ -25,69 +24,43 @@ export async function POST(req: NextRequest) {
         req.ip || req.headers.get('X-Forwarded-For') || 'Unknown';
     try {
         const body = await req.json();
-        const { fullName, username, email, phoneNumber, password } =
-            RegisterFormSchema.parse(body);
+        const { email } = body;
 
-        let user = prisma.user.findUnique({ where: { username } });
-        if (await user) {
-            return NextResponse.json(
-                {
-                    apiRequestInfo,
-                    user: null,
-                    message: 'Tên đăng nhập đã tồn tại',
-                },
-                { status: 409 }
-            );
-        }
-
-        user = prisma.user.findUnique({ where: { email } });
-        if (await user) {
-            return NextResponse.json(
-                {
-                    apiRequestInfo,
-                    user: null,
-                    message: 'Email đã tồn tại',
-                },
-                { status: 409 }
-            );
-        }
-
-        if (phoneNumber) {
-            user = prisma.user.findFirst({ where: { phoneNumber } });
-            if (await user) {
-                return NextResponse.json(
-                    {
-                        apiRequestInfo,
-                        user: null,
-                        message: 'Số điện thoại đã tồn tại',
-                    },
-                    { status: 409 }
-                );
-            }
-        }
-
-        const newUser = await prisma.user.create({
-            data: {
-                fullName,
-                username,
-                email,
-                phoneNumber,
-                password: hashPassword(password),
-            },
+        let user = await prisma.user.findUnique({
+            where: { email },
+            select: { id: true, username: true, status: true },
         });
 
-        const { password: _, ...userWithoutPassword } = newUser;
+        if (!user) {
+            return NextResponse.json(
+                {
+                    apiRequestInfo,
+                    error: 'Email không tồn tại',
+                },
+                { status: 404 }
+            );
+        }
+
+        if (user.status === StatusType.ACTIVE) {
+            return NextResponse.json(
+                {
+                    apiRequestInfo,
+                    error: 'Tài khoản đã được kích hoạt, không thể gửi email kích hoạt',
+                },
+                { status: 400 }
+            );
+        }
 
         const activateToken = await prisma.activateToken.create({
             data: {
-                userId: newUser.id,
+                userId: user.id,
                 token: `${randomUUID()}${randomUUID()}`.replace(/-/g, ''),
             },
         });
 
         const template = handlebars.compile(welcomeTemplate);
         const htmlToSend = template({
-            username,
+            username: user.username,
             siteConfigName: siteConfig.name,
             activeLink: `${siteConfig.url}/api/auth/activate/${activateToken.token}`,
         });
@@ -96,7 +69,7 @@ export async function POST(req: NextRequest) {
             from: process.env.EMAIL_NAME,
             to: email,
             subject: `Kích hoạt tài khoản ${siteConfig.name}`,
-            text: `Chào mừng ${newUser.username} đến với ${siteConfig.name}. Link kích hoạt tài khoản của bạn: ${siteConfig.url}/api/auth/activate/${activateToken.token}`,
+            text: `Chào mừng ${user.username} đến với ${siteConfig.name}. Link kích hoạt tài khoản của bạn: ${siteConfig.url}/api/auth/activate/${activateToken.token}`,
             html: htmlToSend,
         };
 
@@ -105,16 +78,15 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
             {
                 apiRequestInfo,
-                user: userWithoutPassword,
-                message: 'Tài khoản đã được tạo thành công',
+                message: 'Email kích hoạt đã được gửi',
             },
-            { status: 201 }
+            { status: 200 }
         );
     } catch {
         return NextResponse.json(
             {
                 apiRequestInfo,
-                message: 'Đã có lỗi xảy ra trong khi tạo tài khoản',
+                message: 'Đã có lỗi xảy ra trong khi gửi email kích hoạt',
             },
             { status: 500 }
         );

@@ -3,7 +3,11 @@
 import { z } from 'zod';
 import axios from 'axios';
 import { signIn, signOut } from './auth';
-import { RegisterFormSchema, loginFormSchema } from './form-schema';
+import {
+    RegisterFormSchema,
+    loginFormSchema,
+    sendEmailActivateSchema,
+} from './form-schema';
 import prisma from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
@@ -38,7 +42,7 @@ export const login = async (formData: z.infer<typeof loginFormSchema>) => {
         if (error instanceof CredentialsSignin) {
             switch (error.code) {
                 case 'email_not_verified':
-                    return { error: 'Email chưa được xác minh' };
+                    return { error: 'Email chưa được xác thực' };
                 case 'account_not_exists':
                     return { error: 'Tài khoản không tồn tại' };
                 case 'invalid_login':
@@ -206,4 +210,18 @@ export async function getUserStatus() {
     } catch (error) {
         return 'UNAUTHENTICATED';
     }
+}
+
+export async function sendEmailActivate(
+    formData: z.infer<typeof sendEmailActivateSchema>
+) {
+    const { email }: z.infer<typeof sendEmailActivateSchema> = formData;
+    return await axios
+        .post('/auth/activate/resend-email', { email })
+        .then(res => {
+            return { isSuccess: true, error: '' };
+        })
+        .catch(error => {
+            return { isSuccess: false, error: error.response.data.error };
+        });
 }

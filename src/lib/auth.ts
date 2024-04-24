@@ -112,6 +112,7 @@ export const {
                                 ).toString(),
                                 loginType: LoginType.GITHUB,
                                 lastLogin: new Date(),
+                                status: StatusType.ACTIVE,
                             },
                         });
 
@@ -153,6 +154,7 @@ export const {
                                 ).toString(),
                                 loginType: LoginType.GOOGLE,
                                 lastLogin: new Date(),
+                                status: StatusType.ACTIVE,
                             },
                         });
 
