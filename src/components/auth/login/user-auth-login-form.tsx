@@ -28,7 +28,7 @@ export default function UserAuthLoginForm({ message }: { message?: string }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [loginResult, setLoginResult] = useState<
-        { error?: string; isSuccess?: boolean } | undefined
+        { error?: string; errorType?: string; isSuccess?: boolean } | undefined
     >(undefined);
     const [isSessionExpired, setIsSessionExpired] = useState(message);
     const searchParams = useSearchParams();
@@ -68,7 +68,7 @@ export default function UserAuthLoginForm({ message }: { message?: string }) {
                     <AlertDescription>{loginResult?.error}</AlertDescription>
                 </Alert>
             )}
-            {loginResult?.error?.includes('Email') && (
+            {loginResult?.errorType === 'email_not_verified' && (
                 <Button disabled={isLoading} onClick={handleSendEmail}>
                     {isLoading && (
                         <Icons.spinner className=" mr-2 h-4 w-4 animate-spin" />

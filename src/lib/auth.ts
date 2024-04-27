@@ -10,6 +10,7 @@ import {
     AccountNotExistsError,
     EmailNotVerifiedError,
     InvalidLoginError,
+    InvalidLoginTypeError,
     UnauthorizedError,
 } from './errors';
 
@@ -20,6 +21,10 @@ const login = async (credentials: any) => {
 
     if (!user) {
         throw new AccountNotExistsError();
+    }
+
+    if (user.loginType !== LoginType.LOCAL) {
+        throw new InvalidLoginTypeError();
     }
 
     if (user.status === StatusType.BANNED) {

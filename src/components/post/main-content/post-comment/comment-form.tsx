@@ -87,7 +87,7 @@ export default function CommentForm({
                                                     placeholder="Viết bình luận..."
                                                     disabled={isLoading}
                                                     {...field}
-                                                    className="focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-sky-500 focus-visible:ring-offset-1 "
+                                                    className="focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-sky-500 focus-visible:ring-offset-1"
                                                 />
                                             </FormControl>
                                             <FormMessage />

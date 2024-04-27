@@ -32,6 +32,7 @@ model User {
   postCommentLikes PostCommentLike[]
   userLimits  UserLimit[]
   activateTokens ActivateToken[]
+  urls        UserUrl[]
 }
 
 model ActivateToken {
@@ -153,6 +154,14 @@ model UserLimit {
   limit     UserLimitType
   createdAt DateTime   @default(now())
   user      User       @relation(fields: [userId], references: [id])
+}
+
+model UserUrl {
+  id        String   @id @default(cuid())
+  userId    String
+  url       String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum RoleType {

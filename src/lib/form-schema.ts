@@ -29,6 +29,46 @@ export const sendEmailActivateSchema = z.object({
     email: z.string().email({ message: 'Email phải có định dạng chuẩn' }),
 });
 
+export const profileFormSchema = z.object({
+    image: z.any().optional(),
+    fullName: z
+        .string({ required_error: 'Vui lòng điền họ tên' })
+        .min(3, { message: 'Tên phải có ít nhất 3 kí tự' })
+        .max(50, { message: 'Tên có tối đa 50 kí tự' }),
+    username: z
+        .string({ required_error: 'Vui lòng điền tên đăng nhập' })
+        .min(3, { message: 'Tên đăng nhập phải có ít nhất 3 kí tự' })
+        .max(20, { message: 'Tên đăng nhập có tối đa 20 kí tự' }),
+    email: z
+        .string({ required_error: 'Vui lòng điền email' })
+        .email({ message: 'Email phải có định dạng chuẩn' }),
+    phoneNumber: z
+        .string()
+        .min(10, { message: 'Số điện thoại phải có ít nhất 10 kí tự' })
+        .optional()
+        .or(z.literal(''))
+        .transform(e => (e === '' ? undefined : e)),
+    bio: z
+        .string()
+        .max(160, { message: 'Bio có tối đa 160 kí tự' })
+        .min(4, { message: 'Bio phải có ít nhất 4 kí tự' })
+        .optional()
+        .or(z.literal(''))
+        .transform(e => (e === '' ? undefined : e)),
+    urls: z
+        .array(
+            z.object({
+                value: z
+                    .string()
+                    .url({ message: 'Url phải có định dạng chuẩn' })
+                    .max(100, { message: 'Url có tối đa 100 kí tự' })
+                    .min(1, { message: 'Url không được để trống' }),
+            })
+        )
+        .max(5, { message: 'Số lượng URL không được vượt quá 5' })
+        .optional(),
+});
+
 export const RegisterFormSchema = z.object({
     fullName: z
         .string({ required_error: 'Vui lòng điền họ tên' })

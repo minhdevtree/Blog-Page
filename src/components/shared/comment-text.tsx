@@ -12,7 +12,7 @@ export default function CommentText({ comment }: { comment: string }) {
             {comment.length > 150 && (
                 <Badge
                     className="cursor-pointer font-normal ml-2"
-                    variant="third"
+                    variant="outline"
                     onClick={() => setIsShowMore(!isShowMore)}
                 >
                     {isShowMore ? 'Ẩn bớt' : 'Xem thêm'}

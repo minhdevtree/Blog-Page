@@ -15,3 +15,7 @@ export class InvalidLoginError extends CredentialsSignin {
 export class UnauthorizedError extends CredentialsSignin {
     code = 'unauthorized';
 }
+
+export class InvalidLoginTypeError extends CredentialsSignin {
+    code = 'invalid_login_type';
+}

@@ -42,18 +42,36 @@ export const login = async (formData: z.infer<typeof loginFormSchema>) => {
         if (error instanceof CredentialsSignin) {
             switch (error.code) {
                 case 'email_not_verified':
-                    return { error: 'Email chưa được xác thực' };
+                    return {
+                        error: 'Email chưa được xác thực',
+                        errorType: 'email_not_verified',
+                    };
                 case 'account_not_exists':
-                    return { error: 'Tài khoản không tồn tại' };
+                    return {
+                        error: 'Tài khoản không tồn tại',
+                        errorType: 'account_not_exists',
+                    };
+                case 'invalid_login_type':
+                    return {
+                        error: 'Email được liên kết với tài khoản với phương thức đăng nhập khác',
+                        errorType: 'invalid_login_type',
+                    };
                 case 'invalid_login':
-                    return { error: 'Tài khoản hoặc mật khẩu không chính xác' };
+                    return {
+                        error: 'Tài khoản hoặc mật khẩu không chính xác',
+                        errorType: 'invalid_login',
+                    };
                 case 'unauthorized':
-                    return { error: 'Tài khoản đã bị khóa' };
+                    return {
+                        error: 'Tài khoản đã bị khóa',
+                        errorType: 'unauthorized',
+                    };
+
                 default:
-                    return { error: 'Đã có lỗi xảy ra' };
+                    return { error: 'Đã có lỗi xảy ra', errorType: 'unknown' };
             }
         } else {
-            return { error: 'Đã có lỗi xảy ra' };
+            return { error: 'Đã có lỗi xảy ra', errorType: 'unknown' };
         }
         // if (error instanceof EmailNotVerifiedError) {
         //     return { error: 'Email chưa được xác minh' };
@@ -248,5 +266,60 @@ export async function resetPassword(token: string, password: string) {
         })
         .catch(error => {
             return { isSuccess: false, error: error.response.data.error };
+        });
+}
+
+export async function uploadImage(formData: FormData) {
+    return await axios
+        .post('/image/upload', formData, {
+            headers: {
+                'Content-Type': 'image/*',
+            },
+        })
+        .then(res => {
+            return { isSuccess: true, error: '', data: res.data.data.img };
+        })
+        .catch(error => {
+            return {
+                isSuccess: false,
+                error: error.response.data.error,
+                data: '',
+            };
+        });
+}
+
+export async function updateImgProfile(img: string) {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    return await axios
+        .post(
+            '/user/profile/update-img',
+            { img },
+            {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            }
+        )
+        .then(res => {
+            return { isSuccess: true, error: '' };
+        })
+        .catch(error => {
+            return { isSuccess: false, error: error.response.data.error };
+        });
+}
+
+export async function updateProfile(formData: any) {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    return await axios
+        .post('/user/profile/update', formData, {
+            headers: {
+                Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+            },
+        })
+        .then(res => {
+            return { isSuccess: true, error: '' };
+        })
+        .catch(error => {
+            return { isSuccess: false, error: error.response.data.data.error };
         });
 }

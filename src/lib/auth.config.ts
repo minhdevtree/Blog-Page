@@ -12,10 +12,14 @@ export const authConfig = {
             token,
             user,
             account,
+            trigger,
+            session,
         }: {
             token: any;
             user: any;
             account: any;
+            trigger: any;
+            session: any;
         }) {
             if (user) {
                 const databaseUser = await prisma.user.findUnique({
@@ -29,6 +33,9 @@ export const authConfig = {
             }
             if (account) {
                 token.accessToken = account.access_token;
+            }
+            if (trigger === 'update' && session) {
+                token = { ...token, ...session.user };
             }
             return token;
         },

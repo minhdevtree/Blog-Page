@@ -48,6 +48,12 @@ export function UserNav({ session }: { session: any }) {
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem asChild className="cursor-pointer">
+                            <Link href={'/edit-profile'}>Cài đặt</Link>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                         <form action={logout} className="w-full">
                             <Button

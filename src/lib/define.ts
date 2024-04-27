@@ -176,6 +176,21 @@ export type PostComment = {
     };
 };
 
+export type UserLoginProfile = {
+    fullName: string;
+    username: string;
+    email: string;
+    phoneNumber: any;
+    intro: any;
+    img: string;
+    role: string;
+    urls: [
+        {
+            url: string;
+        }
+    ];
+};
+
 export enum RoleType {
     ADMIN,
     USER,

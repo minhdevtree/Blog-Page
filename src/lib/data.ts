@@ -9,6 +9,7 @@ import {
     SearchPostParams,
     Tag,
     TopCreator,
+    UserLoginProfile,
 } from './define';
 import { getCookie } from './action';
 
@@ -241,6 +242,21 @@ export async function isLikedPost(postId: string) {
             .catch(() => false);
     } catch (error) {
         return false;
+    }
+}
+
+export async function getUserLoginProfile() {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    try {
+        return await axios
+            .get(`/user/profile`, {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            })
+            .then(res => res.data.data as UserLoginProfile);
+    } catch (error) {
+        return {} as UserLoginProfile;
     }
 }
 
