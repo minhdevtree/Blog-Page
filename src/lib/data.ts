@@ -134,7 +134,7 @@ export const getUserByEmail = async ({ email }: { email: string }) => {
 export const getTopCreators = async () => {
     try {
         return await axios
-            .get(`/author/top-creators`)
+            .get(`/authors/top-creators`)
             .then(res => res.data.data as TopCreator[]);
     } catch (error) {
         console.error(error);

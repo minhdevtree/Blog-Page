@@ -1,20 +1,18 @@
-// 'use client';
+'use client';
 
 import { logout } from '@/lib/action';
-import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-export default async function LogoutPage() {
-    // const route = useRouter();
-    // // useEffect(() => {
-    // //     signOut({ redirect: false }).then(() => {
-    // //         route.push('/login');
-    // //         route.refresh();
-    // //     });
-    // // }, [route]);
-    logout();
-    // route.push('/login');
+export default function LogoutPage() {
+    const router = useRouter();
+
+    useEffect(() => {
+        logout().then(() => {
+            router.push('/login'); // redirect to login after logout
+        });
+    }, []);
+
     return (
         <div>
             <h1>Đang đăng xuất...</h1>

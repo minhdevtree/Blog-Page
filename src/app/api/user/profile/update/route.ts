@@ -5,8 +5,6 @@ import { getDateFormatted } from '@/lib/utils';
 import { auth } from '@/lib/auth';
 import { profileFormSchema } from '@/lib/form-schema';
 import { StatusType } from '@prisma/client';
-import { signOut } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -60,7 +58,6 @@ export const POST = async (request: NextRequest) => {
         }
 
         if (user?.email !== email) {
-            console.log('email', email);
             const isEmailExist = await prisma.user.findUnique({
                 where: {
                     email,
@@ -78,7 +75,6 @@ export const POST = async (request: NextRequest) => {
                     { status: 400 }
                 );
             } else {
-                console.log('update email');
                 await prisma.user.update({
                     where: {
                         id: session?.user?.id,
@@ -88,8 +84,9 @@ export const POST = async (request: NextRequest) => {
                         email,
                     },
                 });
-                console.log('sign out');
-                redirect('/logout');
+                // NextResponse.redirect(
+                //     process.env.NEXT_PUBLIC_SITE_URL + '/logout'
+                // );
             }
         }
 
@@ -136,6 +133,7 @@ export const POST = async (request: NextRequest) => {
             { status: 200 }
         );
     } catch (err) {
+        console.log('err', err);
         return NextResponse.json(
             {
                 apiRequestInfo,

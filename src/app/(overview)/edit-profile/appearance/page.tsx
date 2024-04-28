@@ -1,5 +1,12 @@
 import { AppearanceForm } from '@/components/edit-profile/appearance/appearance-form';
 import { Separator } from '@/components/ui/separator';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Giao diện',
+    description:
+        'Tùy chỉnh giao diện của trang web. Tự động chuyển đổi chế độ sáng và tối.',
+};
 
 export default function SettingsAppearancePage() {
     return (

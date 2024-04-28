@@ -1,6 +1,7 @@
 import { ApiRequestInfo } from '@/lib/define';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
+import { RoleType } from '@prisma/client';
 import { getDateFormatted } from '@/lib/utils';
 import { createRedisInstance } from '@/config/redis';
 
@@ -20,41 +21,42 @@ export const GET = async (request: NextRequest) => {
             request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
         const redis = createRedisInstance();
-        const cachedCategories = await redis.get('categories');
+        const cachedTopCreators = await redis.get('topCreators');
 
-        if (cachedCategories) {
+        if (cachedTopCreators) {
             return NextResponse.json({
                 apiRequestInfo,
-                data: JSON.parse(cachedCategories),
+                data: JSON.parse(cachedTopCreators),
             });
         } else {
             // Get all posts from database
-            const categories = await prisma.category.findMany({
-                where: { parentId: null },
+            const creators = await prisma.user.findMany({
+                where: { role: RoleType.WRITER },
                 select: {
                     id: true,
-                    title: true,
-                    content: true,
-                    slug: true,
-                    children: true,
+                    username: true,
+                    img: true,
+                    fullName: true,
                 },
+                orderBy: { posts: { _count: 'desc' } },
+                take: 3,
             });
 
             const MAX_AGE = 60 * 60 * 24; // 24 hours in seconds
             const EXPIRY_MS = 'EX'; // seconds
 
             await redis.set(
-                'categories',
-                JSON.stringify(categories),
+                'topCreators',
+                JSON.stringify(creators),
                 EXPIRY_MS,
                 MAX_AGE
             );
 
-            return NextResponse.json({ apiRequestInfo, data: categories });
+            return NextResponse.json({ apiRequestInfo, data: creators });
         }
     } catch (err) {
         return NextResponse.json(
-            { apiRequestInfo, data: { error: 'Fail to fetch categories' } },
+            { apiRequestInfo, data: { error: 'Fail to fetch top creator' } },
             { status: 500 }
         );
     }

@@ -4,8 +4,8 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarNav } from '@/components/edit-profile/side-bar-nav';
 
 export const metadata: Metadata = {
-    title: 'Forms',
-    description: 'Advanced form example using react-hook-form and Zod.',
+    title: 'Cài đặt tài khoản',
+    description: 'Quản lý thông tin cá nhân và cài đặt tài khoản',
 };
 
 const sidebarNavItems = [

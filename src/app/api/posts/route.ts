@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
+import { createRedisInstance } from '@/config/redis';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -21,6 +22,9 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
         hasNext: false,
         hasPrev: false,
     } as PageMeta;
+    // Get client IP
+    apiRequestInfo.clientIp =
+        request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
     try {
         // Get searchParams from request
         const limit = request.nextUrl.searchParams.get('limit');
@@ -108,72 +112,95 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
             );
         }
 
-        // Get all posts from database
-
-        pageMeta.totalElements = await prisma.post.count({
-            where: { parentId: null },
-        });
-        pageMeta.pageSize = pageSize ? parseInt(pageSize) : pageMeta.pageSize;
-        pageMeta.totalPages = Math.ceil(
-            pageMeta.totalElements / pageMeta.pageSize
+        const redis = createRedisInstance();
+        const cachedPosts = await redis.get(
+            `posts:${limit}:${sort}:${page}:${pageSize}`
         );
-        pageMeta.page = parseInt(page || '1');
-        pageMeta.hasNext = pageMeta.page < pageMeta.totalPages;
-        pageMeta.hasPrev = pageMeta.page > 1;
 
-        const skip = (pageMeta.page - 1) * pageMeta.pageSize;
+        if (cachedPosts) {
+            return NextResponse.json({
+                apiRequestInfo,
+                data: JSON.parse(cachedPosts),
+            });
+        } else {
+            // Get all posts from database
 
-        // Get client IP
-        apiRequestInfo.clientIp =
-            request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
+            pageMeta.totalElements = await prisma.post.count({
+                where: { parentId: null },
+            });
+            pageMeta.pageSize = pageSize
+                ? parseInt(pageSize)
+                : pageMeta.pageSize;
+            pageMeta.totalPages = Math.ceil(
+                pageMeta.totalElements / pageMeta.pageSize
+            );
+            pageMeta.page = parseInt(page || '1');
+            pageMeta.hasNext = pageMeta.page < pageMeta.totalPages;
+            pageMeta.hasPrev = pageMeta.page > 1;
 
-        // Get all posts from database
-        const posts = await prisma.post.findMany({
-            skip,
-            where: { parentId: null },
-            orderBy: { publishedAt: sort === 'asc' ? 'asc' : 'desc' },
-            take: pageMeta.pageSize,
-            select: {
-                id: true,
-                title: true,
-                summary: true,
-                content: true,
-                publishedAt: true,
-                published: true,
-                slug: true,
-                author: {
-                    select: {
-                        id: true,
-                        fullName: true,
-                        img: true,
-                        username: true,
+            const skip = (pageMeta.page - 1) * pageMeta.pageSize;
+
+            // Get all posts from database
+            const posts = await prisma.post.findMany({
+                skip,
+                where: { parentId: null },
+                orderBy: { publishedAt: sort === 'asc' ? 'asc' : 'desc' },
+                take: pageMeta.pageSize,
+                select: {
+                    id: true,
+                    title: true,
+                    summary: true,
+                    content: true,
+                    publishedAt: true,
+                    published: true,
+                    slug: true,
+                    author: {
+                        select: {
+                            id: true,
+                            fullName: true,
+                            img: true,
+                            username: true,
+                        },
+                    },
+                    categories: {
+                        select: {
+                            id: true,
+                            title: true,
+                            slug: true,
+                        },
+                    },
+                    tags: {
+                        select: {
+                            id: true,
+                            title: true,
+                            slug: true,
+                        },
+                    },
+                    metas: {
+                        select: {
+                            id: true,
+                            key: true,
+                            value: true,
+                        },
                     },
                 },
-                categories: {
-                    select: {
-                        id: true,
-                        title: true,
-                        slug: true,
-                    },
-                },
-                tags: {
-                    select: {
-                        id: true,
-                        title: true,
-                        slug: true,
-                    },
-                },
-                metas: {
-                    select: {
-                        id: true,
-                        key: true,
-                        value: true,
-                    },
-                },
-            },
-        });
+            });
 
-        return NextResponse.json({ apiRequestInfo, data: { pageMeta, posts } });
+            const MAX_AGE = 60 * 15; // 15 minutes in seconds
+            const EXPIRY_MS = 'EX'; // seconds
+
+            await redis.set(
+                `posts:${limit}:${sort}:${page}:${pageSize}`,
+                JSON.stringify({ pageMeta, posts }),
+                EXPIRY_MS,
+                MAX_AGE
+            );
+
+            return NextResponse.json({
+                apiRequestInfo,
+                data: { pageMeta, posts },
+            });
+        }
     } catch (err) {
         return NextResponse.json(
             { apiRequestInfo, data: { error: 'Fail to fetch posts' } },

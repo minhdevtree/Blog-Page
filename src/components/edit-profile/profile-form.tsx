@@ -25,6 +25,7 @@ import { Icons } from '../icons/icons';
 import { updateImgProfile, updateProfile, uploadImage } from '@/lib/action';
 import { useSession } from 'next-auth/react';
 import { Plus, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
@@ -41,6 +42,7 @@ export function ProfileForm({ user }: { user: UserLoginProfile }) {
         bio: user.intro || '',
         urls: user.urls.map(url => ({ value: url.url })),
     };
+    const route = useRouter();
     const form = useForm<z.infer<typeof profileFormSchema>>({
         resolver: zodResolver(profileFormSchema),
         defaultValues,
@@ -95,11 +97,9 @@ export function ProfileForm({ user }: { user: UserLoginProfile }) {
                     console.log(session);
                     toast.success('Cập nhật ảnh đại diện thành công!');
                 } else {
-                    console.log(1);
                     toast.error('Có lỗi xảy ra khi cập nhật ảnh đại diện!');
                 }
             } else {
-                console.log(2);
                 toast.error('Có lỗi xảy ra khi cập nhật ảnh đại diện!');
             }
         }
@@ -107,6 +107,21 @@ export function ProfileForm({ user }: { user: UserLoginProfile }) {
         if (formData) {
             const result = await updateProfile(data);
             if (result.isSuccess) {
+                if (data.email !== session?.user?.email) {
+                    toast.success(
+                        'Cập nhật hồ sơ thành công! Bạn cần xác minh lại email.'
+                    );
+                    route.push('/logout');
+                    return;
+                }
+                update({
+                    ...session,
+                    user: {
+                        ...session?.user,
+                        fullName: data.fullName,
+                        username: data.username,
+                    },
+                });
                 toast.success('Cập nhật hồ sơ thành công!');
             } else {
                 toast.error(result.error);

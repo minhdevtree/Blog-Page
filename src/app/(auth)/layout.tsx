@@ -38,10 +38,10 @@ export default function AuthLayout({
                 <div className="relative z-20 mt-auto">
                     <blockquote className="space-y-2 text-sky-500">
                         <p className="text-lg">
-                            &ldquo;Đéo biết nói câu đạo lý gì hay ở chỗ
-                            này!&rdquo;
+                            &ldquo;Sống là điều hiếm có nhất trên thế giới. Phần
+                            lớn tất cả mọi người chỉ tồn tại&rdquo;
                         </p>
-                        <footer className="text-sm">Minh Đẹp Trai</footer>
+                        <footer className="text-sm">Oscar Wilde</footer>
                     </blockquote>
                 </div>
             </div>
