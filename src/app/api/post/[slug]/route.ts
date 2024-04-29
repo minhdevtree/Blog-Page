@@ -26,7 +26,30 @@ export const GET = async (
 
         const cachedPostDetail = await redis.get(`post-detail:${slug}`);
 
+        const count = await prisma.post.findUnique({
+            where: {
+                slug: slug,
+                parent: null,
+            },
+            select: {
+                _count: {
+                    select: {
+                        comments: true,
+                        likes: true,
+                    },
+                },
+            },
+        });
+
         if (cachedPostDetail) {
+            if (count) {
+                const postDetail = JSON.parse(cachedPostDetail);
+                postDetail._count = count._count;
+                return NextResponse.json({
+                    apiRequestInfo,
+                    data: postDetail,
+                });
+            }
             return NextResponse.json({
                 apiRequestInfo,
                 data: JSON.parse(cachedPostDetail),
@@ -104,7 +127,7 @@ export const GET = async (
                 },
             });
 
-            const MAX_AGE = 60 * 60 * 1; // 1 hour in seconds
+            const MAX_AGE = 60 * 60 * 24; // 24 hours in seconds
             const EXPIRY_MS = 'EX'; // seconds
 
             await redis.set(
