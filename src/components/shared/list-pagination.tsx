@@ -17,13 +17,23 @@ import React from 'react';
 export default function ListPagination({
     meta,
     scroll = true,
-}: Readonly<{ meta: PageMeta; scroll?: boolean }>) {
+    bookmark,
+}: Readonly<{ meta: PageMeta; scroll?: boolean; bookmark?: string }>) {
     const { hasPrev, hasNext, totalPages } = meta;
     const currentPage = Number(useSearchParams().get('page')) || 1;
     const { push } = useRouter();
     // const { replace } = useRouter();
 
     const handleClick = (page: number) => {
+        if (bookmark) {
+            const element = document.getElementById(bookmark);
+            if (element) {
+                window.scrollTo({
+                    top: element.offsetTop - 100, // offset by 100px
+                    behavior: 'smooth',
+                });
+            }
+        }
         const searchParams = new URLSearchParams(location.search);
         const pathName = location.pathname;
         searchParams.set('page', String(page));

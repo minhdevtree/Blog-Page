@@ -104,7 +104,7 @@ export const GET = async (
                 },
             });
 
-            const MAX_AGE = 60 * 60 * 24; // 24 hours in seconds
+            const MAX_AGE = 60 * 60 * 1; // 1 hour in seconds
             const EXPIRY_MS = 'EX'; // seconds
 
             await redis.set(

@@ -44,7 +44,7 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
             request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
         const redis = createRedisInstance();
-        const cachedPopularTags = await redis.get('popularTags');
+        const cachedPopularTags = await redis.get(`popular-tags:${limit}`);
 
         if (cachedPopularTags) {
             return NextResponse.json({
@@ -70,7 +70,7 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
             const EXPIRY_MS = 'EX'; // seconds
 
             await redis.set(
-                'popularTags',
+                `popular-tags:${limit}`,
                 JSON.stringify(posts),
                 EXPIRY_MS,
                 MAX_AGE

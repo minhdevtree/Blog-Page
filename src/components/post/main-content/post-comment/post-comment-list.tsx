@@ -26,7 +26,11 @@ export default async function PostCommentList({
                     postId={postId}
                 />
             ))}
-            <ListPagination meta={pageMeta} scroll={false} />
+            <ListPagination
+                meta={pageMeta}
+                scroll={false}
+                bookmark="post-comment"
+            />
         </div>
     );
 }

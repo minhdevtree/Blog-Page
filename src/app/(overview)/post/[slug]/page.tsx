@@ -3,7 +3,6 @@ import TagSection from '@/components/overview/home/tag/tag';
 import MainContent from '@/components/post/main-content/main-content';
 import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
 import { Card } from '@/components/ui/card';
-import { auth } from '@/lib/auth';
 import { getPostDetail, isLikedPost } from '@/lib/data';
 import { BreadItem, SearchCommentParams } from '@/lib/define';
 import { Metadata } from 'next';
@@ -11,7 +10,6 @@ import { Suspense } from 'react';
 import prisma from '@/lib/prisma';
 import Menu from '@/components/post/menu/menu';
 import PostComment from '@/components/post/main-content/post-comment/post-comment';
-import PostCommentListLoading from '@/components/post/main-content/post-comment/loading/post-comment-list-loading';
 
 type Props = {
     params: { slug: string };
