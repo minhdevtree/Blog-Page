@@ -27,6 +27,15 @@ const urlRequireAuthenticated = [
     '/profile/*',
 ];
 
+const urlPostDetail = ['/post/*'];
+
+function isUrlPostDetail(route: string) {
+    return urlPostDetail.some(pattern => {
+        const regex = new RegExp('^' + pattern.split('*').join('.*') + '$');
+        return regex.test(route);
+    });
+}
+
 function routeRequiresSession(route: string) {
     return apiRequireSession.some(pattern => {
         const regex = new RegExp('^' + pattern.split('*').join('.*') + '$');
@@ -52,6 +61,13 @@ export async function middleware(req: NextRequest) {
     const session = await auth();
     const { pathname, searchParams } = req.nextUrl;
     const callbackUrl = searchParams.get('callbackUrl') || '/';
+
+    // ONLY AUTHENTICATED USERS CAN ACCESS CERTAIN POST DETAIL ROUTES
+    // if (isUrlPostDetail(pathname)) {
+    //     if (!session?.user) {
+    //         return Response.redirect(new URL('/login', req.nextUrl));
+    //     }
+    // }
 
     // ONLY UNAUTHENTICATED USERS CAN REACH CERTAIN ROUTES
     if (routeRequiresAuthenticated(pathname) && !session?.user) {

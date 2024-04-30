@@ -33,11 +33,11 @@ export const POST = async (request: NextRequest) => {
             },
         });
 
-        const oldImgRef = ref(storage, user?.img);
         if (
-            img !== '/avatar/noavatar.png' &&
-            img.includes(process.env.FIREBASE_STORAGE_BUCKET)
+            user?.img !== '/avatar/noavatar.png' &&
+            user?.img.includes(process.env.FIREBASE_STORAGE_BUCKET!)
         ) {
+            const oldImgRef = ref(storage, user?.img);
             await deleteObject(oldImgRef);
         }
 

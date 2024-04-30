@@ -1,6 +1,5 @@
 import prisma from '@/lib/prisma';
 import { JWT } from 'next-auth/jwt';
-import NextAuth, { type Session, type User } from 'next-auth';
 
 export const authConfig = {
     // adapter: PrismaAdapter(prisma),
@@ -21,7 +20,7 @@ export const authConfig = {
             user: any;
             account: any;
             trigger?: any;
-            session?: Session;
+            session?: any;
         }) {
             if (user) {
                 const databaseUser = await prisma.user.findUnique({

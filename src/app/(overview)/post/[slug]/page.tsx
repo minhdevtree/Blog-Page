@@ -46,6 +46,10 @@ export default async function PostPage({
 }) {
     const post = await getPostDetail(params.slug);
 
+    if (post?.error) {
+        return <div>{post.error}</div>;
+    }
+
     const breadItems = [
         {
             title: 'Tất cả bài viết',

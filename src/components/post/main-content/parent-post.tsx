@@ -12,7 +12,7 @@ export default function ParentPost({ post }: { post: PostDetail }) {
                 className="mt-10"
                 dangerouslySetInnerHTML={{ __html: post.content }}
             ></div>
-            {post.metas.map((meta, index) => (
+            {post?.metas?.map((meta, index) => (
                 <PostMeta meta={meta} key={index} />
             ))}
         </div>

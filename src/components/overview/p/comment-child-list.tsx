@@ -31,7 +31,7 @@ export default async function CommentChildList({
                     session={session}
                 />
             ))}
-            <ListPagination meta={pageMeta} scroll={false} />
+            <ListPagination meta={pageMeta} scroll={true} />
         </div>
     );
 }

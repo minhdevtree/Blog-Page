@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
 import { createRedisInstance } from '@/config/redis';
+import { auth } from '@/lib/auth';
+import { PublishedType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -38,8 +40,32 @@ export const GET = async (
                         likes: true,
                     },
                 },
+                authorId: true,
+                published: true,
             },
         });
+
+        if (count?.published === PublishedType.PUBLISHED_SUBSCRIBERS) {
+            // Check ì user has followed author or not
+            const session = await auth();
+            const isFollowed = await prisma.follow.findFirst({
+                where: {
+                    followerId: session?.user?.id,
+                    followingId: count?.authorId || '',
+                },
+            });
+
+            if (!isFollowed) {
+                return NextResponse.json(
+                    {
+                        apiRequestInfo,
+                        data: {},
+                        error: 'Bài viết này chỉ dành cho người theo dõi tác giả',
+                    },
+                    { status: 403 }
+                );
+            }
+        }
 
         if (cachedPostDetail) {
             if (count) {
@@ -143,7 +169,8 @@ export const GET = async (
         return NextResponse.json(
             {
                 apiRequestInfo,
-                data: { error: `Fail to fetch post slug: ${slug}` },
+                data: {},
+                error: `Fail to fetch post slug: ${slug}`,
             },
             { status: 500 }
         );

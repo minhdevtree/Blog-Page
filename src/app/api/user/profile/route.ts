@@ -33,6 +33,7 @@ export const GET = async (request: NextRequest) => {
                 intro: true,
                 img: true,
                 role: true,
+                loginType: true,
                 urls: {
                     select: {
                         url: true,

@@ -143,13 +143,12 @@ export const getTopCreators = async () => {
 };
 
 export const getPostDetail = async (slug: string) => {
-    try {
-        return await axios
-            .get(`/post/${slug}`)
-            .then(res => res.data.data as PostDetail);
-    } catch (error) {
-        return {} as PostDetail;
-    }
+    return await axios
+        .get(`/post/${slug}`)
+        .then(res => res.data.data as PostDetail)
+        .catch(error => {
+            return error.response.data;
+        });
 };
 
 export const getPostParentComments = async (

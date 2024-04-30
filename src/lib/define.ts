@@ -184,6 +184,7 @@ export type UserLoginProfile = {
     intro: any;
     img: string;
     role: string;
+    loginType: string;
     urls: [
         {
             url: string;

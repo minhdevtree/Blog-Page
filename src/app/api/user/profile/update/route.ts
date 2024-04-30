@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDateFormatted } from '@/lib/utils';
 import { auth } from '@/lib/auth';
 import { profileFormSchema } from '@/lib/form-schema';
-import { StatusType } from '@prisma/client';
+import { LoginType, StatusType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -63,6 +63,15 @@ export const POST = async (request: NextRequest) => {
                     email,
                 },
             });
+
+            if (isEmailExist?.loginType !== LoginType.LOCAL) {
+                return NextResponse.json({
+                    apiRequestInfo,
+                    data: {
+                        error: 'Không thể cập nhật email của tài khoản này do email được quản lý bởi bên thứ ba.',
+                    },
+                });
+            }
 
             if (isEmailExist) {
                 return NextResponse.json(

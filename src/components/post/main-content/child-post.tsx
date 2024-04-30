@@ -1,6 +1,4 @@
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { ChildPostDetail, PostDetail } from '@/lib/define';
-import Image from 'next/image';
+import { ChildPostDetail } from '@/lib/define';
 import PostMeta from './post-meta';
 
 export default function ChildPost({ post }: { post: ChildPostDetail }) {
@@ -10,13 +8,13 @@ export default function ChildPost({ post }: { post: ChildPostDetail }) {
                 className="text-xl font-bold leading-none text-sky-500 my-5"
                 id={post.id}
             >
-                {`${post.order}. ${post.title}`}
+                {`${post?.order}. ${post?.title}`}
             </h1>
             <div
                 className="mt-2"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: post?.content }}
             ></div>
-            {post.metas.map((meta, index) => (
+            {post?.metas.map((meta, index) => (
                 <PostMeta meta={meta} key={index} />
             ))}
         </div>
