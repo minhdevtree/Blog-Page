@@ -16,6 +16,7 @@ const apiRequireSession = [
     '/api/post/*/comment',
     '/api/post/*/like',
     '/api/user/profile',
+    'api/post/*/bookmark',
 ];
 
 const urlRequireUnauthenticated = ['/login', '/register', '/activate'];

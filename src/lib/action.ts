@@ -156,6 +156,30 @@ export const handleLikePost = async (postId: string) => {
     return result;
 };
 
+export const handleBookmarkPost = async (postId: string) => {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    const result = await axios
+        .post(`/post/${postId}/bookmark`, undefined, {
+            headers: {
+                Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+            },
+        })
+        .then(response => {
+            if (response.data.data.error) {
+                return { isSuccess: false, message: response.data.data.error };
+            }
+            return { isSuccess: true, message: response.data.data.message };
+        })
+        .catch(error => {
+            return {
+                isSuccess: false,
+                message: error.response.data.data.error,
+            };
+        });
+
+    return result;
+};
+
 export const handleLikeComment = async (commentId: string) => {
     const sessionTokenAuthJs = await getCookie('authjs.session-token');
     const result = await axios

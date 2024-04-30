@@ -1,5 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { AuthorPostDetail } from '@/lib/define';
+import { BookmarkIcon } from '@radix-ui/react-icons';
 import { SquarePen, UserRoundPlus } from 'lucide-react';
 
 export default function Author({ author }: { author: AuthorPostDetail }) {

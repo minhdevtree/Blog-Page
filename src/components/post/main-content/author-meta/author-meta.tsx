@@ -7,11 +7,15 @@ export default function AuthorMeta({
     publishedAt,
     commentsCount,
     likesCount,
+    isBookmarked,
+    postId,
 }: {
     author: AuthorPostDetail;
     publishedAt: string;
     commentsCount: number;
     likesCount: number;
+    isBookmarked: boolean;
+    postId: string;
 }) {
     return (
         <div className="flex justify-between mb-2 flex-col sm:flex-row gap-2">
@@ -20,6 +24,8 @@ export default function AuthorMeta({
                 publishedAt={publishedAt}
                 commentsCount={commentsCount}
                 likesCount={likesCount}
+                isBookmarked={isBookmarked}
+                postId={postId}
             />
         </div>
     );

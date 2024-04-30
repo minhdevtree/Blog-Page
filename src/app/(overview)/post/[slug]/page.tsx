@@ -3,13 +3,15 @@ import TagSection from '@/components/overview/home/tag/tag';
 import MainContent from '@/components/post/main-content/main-content';
 import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
 import { Card } from '@/components/ui/card';
-import { getPostDetail, isLikedPost } from '@/lib/data';
+import { getPostDetail, isBookmarkedPost, isLikedPost } from '@/lib/data';
 import { BreadItem, SearchCommentParams } from '@/lib/define';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import prisma from '@/lib/prisma';
 import Menu from '@/components/post/menu/menu';
 import PostComment from '@/components/post/main-content/post-comment/post-comment';
+import PostNotFound from '@/components/post/post-not-found';
+import PostError from '@/components/post/post-error';
 
 type Props = {
     params: { slug: string };
@@ -32,8 +34,10 @@ export async function generateMetadata({
     });
 
     return {
-        title: post?.title || 'Bài đăng',
-        description: `Bài đăng với nội dung: ${post?.title}`,
+        title: post?.title || 'Không tìm thấy bài viết',
+        description: post?.title
+            ? `Bài đăng với nội dung: ${post?.title}`
+            : 'Bài viết bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.',
     };
 }
 
@@ -47,7 +51,11 @@ export default async function PostPage({
     const post = await getPostDetail(params.slug);
 
     if (post?.error) {
-        return <div>{post.error}</div>;
+        return <PostError error={post.error} />;
+    }
+
+    if (!post) {
+        return <PostNotFound />;
     }
 
     const breadItems = [
@@ -63,12 +71,18 @@ export default async function PostPage({
 
     const isLiked = await isLikedPost(post.id);
 
+    const isBookmarked = await isBookmarkedPost(post.id);
+
     return (
         <Card className="w-full px-5 py-10">
             <div className="grid grid-cols-4 max-lg:grid-cols-3 gap-5">
                 <div className="col-span-3">
                     <BreadcrumbComponent breadcrumbs={breadItems} />
-                    <MainContent post={post} isLiked={isLiked} />
+                    <MainContent
+                        post={post}
+                        isLiked={isLiked}
+                        isBookmarked={isBookmarked}
+                    />
 
                     <PostComment postId={post.id} searchParams={searchParams} />
                 </div>

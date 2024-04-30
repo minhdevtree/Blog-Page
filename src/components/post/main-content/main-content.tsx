@@ -13,9 +13,11 @@ import PublishedBadge from '@/components/shared/published-badge';
 export default function MainContent({
     post,
     isLiked,
+    isBookmarked,
 }: {
     post: PostDetail;
     isLiked: boolean;
+    isBookmarked: boolean;
 }) {
     return (
         <div className="mt-5">
@@ -24,6 +26,8 @@ export default function MainContent({
                 commentsCount={post?._count?.comments}
                 likesCount={post?._count?.likes}
                 publishedAt={post?.publishedAt}
+                isBookmarked={isBookmarked}
+                postId={post?.id}
             />
             <div className="flex justify-between items-start mt-3">
                 <div>
