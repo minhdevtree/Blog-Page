@@ -52,3 +52,12 @@ export function createRedisInstance(config = getRedisConfiguration()) {
         throw new Error(`[Redis] Could not create a Redis instance`);
     }
 }
+
+let redisInstance: Redis | null = null;
+
+export function getRedisInstance() {
+    if (!redisInstance) {
+        redisInstance = createRedisInstance();
+    }
+    return redisInstance;
+}

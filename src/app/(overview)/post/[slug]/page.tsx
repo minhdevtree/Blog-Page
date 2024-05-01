@@ -3,7 +3,12 @@ import TagSection from '@/components/overview/home/tag/tag';
 import MainContent from '@/components/post/main-content/main-content';
 import BreadcrumbComponent from '@/components/shared/breadcrumb-component';
 import { Card } from '@/components/ui/card';
-import { getPostDetail, isBookmarkedPost, isLikedPost } from '@/lib/data';
+import {
+    getPostDetail,
+    isBookmarkedPost,
+    isFollowedUser,
+    isLikedPost,
+} from '@/lib/data';
 import { BreadItem, SearchCommentParams } from '@/lib/define';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -73,6 +78,8 @@ export default async function PostPage({
 
     const isBookmarked = await isBookmarkedPost(post.id);
 
+    const isFollowed = await isFollowedUser(post.author.id);
+
     return (
         <Card className="w-full px-5 py-10">
             <div className="grid grid-cols-4 max-lg:grid-cols-3 gap-5">
@@ -82,6 +89,7 @@ export default async function PostPage({
                         post={post}
                         isLiked={isLiked}
                         isBookmarked={isBookmarked}
+                        isFollowed={isFollowed}
                     />
 
                     <PostComment postId={post.id} searchParams={searchParams} />

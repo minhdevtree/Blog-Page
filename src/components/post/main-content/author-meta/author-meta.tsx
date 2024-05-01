@@ -8,6 +8,7 @@ export default function AuthorMeta({
     commentsCount,
     likesCount,
     isBookmarked,
+    isFollowed,
     postId,
 }: {
     author: AuthorPostDetail;
@@ -15,11 +16,12 @@ export default function AuthorMeta({
     commentsCount: number;
     likesCount: number;
     isBookmarked: boolean;
+    isFollowed: boolean;
     postId: string;
 }) {
     return (
         <div className="flex justify-between mb-2 flex-col sm:flex-row gap-2">
-            <Author author={author} />
+            <Author author={author} isFollowed={isFollowed} />
             <PostTime
                 publishedAt={publishedAt}
                 commentsCount={commentsCount}

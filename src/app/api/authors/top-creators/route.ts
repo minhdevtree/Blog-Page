@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { RoleType } from '@prisma/client';
 import { getDateFormatted } from '@/lib/utils';
-import { createRedisInstance } from '@/config/redis';
+import { getRedisInstance } from '@/config/redis';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -20,7 +20,7 @@ export const GET = async (request: NextRequest) => {
         apiRequestInfo.clientIp =
             request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
-        const redis = createRedisInstance();
+        const redis = getRedisInstance();
         const cachedTopCreators = await redis.get('topCreators');
 
         if (cachedTopCreators) {

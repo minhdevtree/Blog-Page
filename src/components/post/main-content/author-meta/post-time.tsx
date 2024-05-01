@@ -11,6 +11,7 @@ import {
     UserRoundPlus,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function PostTime({
@@ -26,23 +27,26 @@ export default function PostTime({
     isBookmarked: boolean;
     postId: string;
 }) {
-    const router = useRouter();
+    const [isClicked, setIsClicked] = useState(false);
+    const [isBookmark, setIsBookmark] = useState(isBookmarked);
     const handleBookmark = async () => {
+        setIsClicked(true);
         const result = await handleBookmarkPost(postId);
         if (result.isSuccess) {
             toast.success(result.message);
+            setIsBookmark(!isBookmark);
+            setTimeout(() => setIsClicked(false), 500);
         } else {
             toast.error(result.message || 'Đã có lỗi xảy ra');
         }
-        router.refresh();
     };
     return (
         <div className="text-base leading-none text-muted-foreground flex flex-col items-end justify-between gap-2">
-            <div className="max-sm:hidden">
+            <div className="max-md:hidden">
                 Đã đăng vào {getFormatDistanceToNow(publishedAt)} -{' '}
                 {getDateFormatted(publishedAt)}
             </div>
-            <div className="sm:hidden">
+            <div className="md:hidden">
                 Đã đăng vào {getDateFormatted(publishedAt)}
             </div>
             <div className="flex gap-4">
@@ -54,8 +58,13 @@ export default function PostTime({
                     <MessageCircle className="w-4 h-4" />
                     <span>{commentsCount}</span>
                 </div>
-                <button onClick={handleBookmark}>
-                    {isBookmarked ? (
+                <button
+                    onClick={handleBookmark}
+                    className={`transition-all duration-500 ease-in-out transform ${
+                        isClicked ? 'scale-90' : ''
+                    }`}
+                >
+                    {isBookmark ? (
                         <div className="flex gap-1 items-center">
                             <BookmarkCheckIcon className="w-4 h-4" />
                         </div>

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { ApiRequestInfo, PageMeta } from '@/lib/define';
+import { ApiRequestInfo } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
-import { createRedisInstance } from '@/config/redis';
+import { getRedisInstance } from '@/config/redis';
 import { auth } from '@/lib/auth';
 import { PublishedType } from '@prisma/client';
 
@@ -24,7 +24,7 @@ export const GET = async (
     apiRequestInfo.clientIp =
         request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
     try {
-        const redis = createRedisInstance();
+        const redis = getRedisInstance();
 
         const cachedPostDetail = await redis.get(`post-detail:${slug}`);
 

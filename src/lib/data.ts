@@ -244,6 +244,22 @@ export async function isLikedPost(postId: string) {
     }
 }
 
+export async function isFollowedUser(userId: string) {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    try {
+        return await axios
+            .get(`/user/${userId}/follow`, {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+            })
+            .then(res => res.data.data.isFollowed as boolean)
+            .catch(() => false);
+    } catch (error) {
+        return false;
+    }
+}
+
 export async function isBookmarkedPost(postId: string) {
     const sessionTokenAuthJs = await getCookie('authjs.session-token');
     try {

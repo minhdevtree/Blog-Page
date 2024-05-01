@@ -8,6 +8,7 @@ import { HeartFilledIcon, HeartIcon } from '@radix-ui/react-icons';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function PostAction({
@@ -21,15 +22,24 @@ export default function PostAction({
     isLiked: boolean;
     postId: string;
 }) {
-    const router = useRouter();
+    const [isClicked, setIsClicked] = useState(false);
+    const [isLike, setIsLike] = useState(isLiked);
+    const [totalLikes, setTotalLikes] = useState(likesCount);
     const handleLike = async () => {
+        setIsClicked(true);
         const result = await handleLikePost(postId);
         if (result.isSuccess) {
             toast.success(result.message);
+            if (isLike) {
+                setTotalLikes(totalLikes - 1);
+            } else {
+                setTotalLikes(totalLikes + 1);
+            }
+            setIsLike(!isLike);
+            setTimeout(() => setIsClicked(false), 500);
         } else {
             toast.error(result.message || 'Đã có lỗi xảy ra');
         }
-        router.refresh();
     };
 
     const handleClick = (event: any) => {
@@ -47,7 +57,7 @@ export default function PostAction({
             <div className="flex gap-4 mt-10">
                 <div className="flex gap-2 items-center">
                     <Heart className="w-4 h-4" />
-                    <span>{likesCount}</span>
+                    <span>{totalLikes}</span>
                 </div>
                 <div className="flex gap-2 items-center">
                     <MessageCircle className="w-4 h-4" />
@@ -58,10 +68,12 @@ export default function PostAction({
             <div className="flex justify-between md:px-10 text-sky-500">
                 <Button
                     variant="hidden"
-                    className="flex gap-2 items-center hover:text-sky-600 hover:dark:bg-gray-700 hover:bg-sky-100"
+                    className={`flex gap-2 items-center hover:text-sky-600 hover:dark:bg-gray-700 hover:bg-sky-100 transition-all duration-500 ease-in-out transform ${
+                        isClicked ? 'scale-90' : ''
+                    }`}
                     onClick={handleLike}
                 >
-                    {isLiked ? (
+                    {isLike ? (
                         <>
                             <HeartFilledIcon className="w-7 h-7" />
                             <span className="max-md:hidden">Đã thích</span>

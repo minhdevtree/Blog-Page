@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
-import { createRedisInstance } from '@/config/redis';
+import { getRedisInstance } from '@/config/redis';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -118,7 +118,7 @@ export const GET = async (
             );
         }
 
-        const redis = createRedisInstance();
+        const redis = getRedisInstance();
         const cachedPostsByTag = await redis.get(
             `posts-by-tag:${slug}:${limit}:${sort}:${page}:${pageSize}`
         );

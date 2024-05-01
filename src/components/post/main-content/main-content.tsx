@@ -14,10 +14,12 @@ export default function MainContent({
     post,
     isLiked,
     isBookmarked,
+    isFollowed,
 }: {
     post: PostDetail;
     isLiked: boolean;
     isBookmarked: boolean;
+    isFollowed: boolean;
 }) {
     return (
         <div className="mt-5">
@@ -27,6 +29,7 @@ export default function MainContent({
                 likesCount={post?._count?.likes}
                 publishedAt={post?.publishedAt}
                 isBookmarked={isBookmarked}
+                isFollowed={isFollowed}
                 postId={post?.id}
             />
             <div className="flex justify-between items-start mt-3">

@@ -28,6 +28,7 @@ export default function PostMeta({ meta }: { meta: MetaPostDetail }) {
                                         src={meta.value}
                                         alt="Image"
                                         fill
+                                        priority={true}
                                         className="rounded-md object-cover"
                                     />
                                 </AspectRatio>

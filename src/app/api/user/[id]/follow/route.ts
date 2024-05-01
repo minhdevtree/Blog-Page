@@ -7,44 +7,17 @@ import { NextRequest, NextResponse } from 'next/server';
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
     time: currentTime,
-    apiName: 'Like Post',
+    apiName: 'Follow User',
     method: 'GET',
-    requestUrl: '/api/post/[postId]/bookmark',
+    requestUrl: '/api/user/[id]/follow',
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
-export const GET = async (
-    request: NextRequest,
-    { params }: { params: { slug: string } }
-) => {
-    const { slug: id } = params;
-
-    apiRequestInfo.clientIp =
-        request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
-
-    const session = await auth();
-    const isAddToBookmark =
-        (await prisma.bookMark.findFirst({
-            where: {
-                userId: session?.user?.id,
-                postId: id,
-            },
-        })) !== null;
-
-    return NextResponse.json(
-        {
-            apiRequestInfo,
-            data: { isBookmark: isAddToBookmark },
-        },
-        { status: 200 }
-    );
-};
-
 export const POST = async (
     request: NextRequest,
-    { params }: { params: { slug: string } }
+    { params }: { params: { id: string } }
 ) => {
-    const { slug: postId } = params;
+    const { id } = params;
 
     apiRequestInfo.method = 'POST';
 
@@ -57,7 +30,7 @@ export const POST = async (
         (await prisma.userLimit.findFirst({
             where: {
                 userId: session?.user?.id,
-                limit: UserLimitType.BOOKMARK,
+                limit: UserLimitType.FOLLOW,
             },
         })) !== null;
 
@@ -66,7 +39,7 @@ export const POST = async (
             {
                 apiRequestInfo,
                 data: {
-                    error: 'Tài khoản của bạn đã bị hạn chế lưu bài viết',
+                    error: 'Tài khoản của bạn đã bị hạn chế theo dõi người dùng',
                 },
             },
             { status: 403 }
@@ -75,49 +48,75 @@ export const POST = async (
 
     try {
         const userId = session?.user?.id;
-        const bookmark = await prisma.bookMark.findFirst({
+        const follow = await prisma.follow.findFirst({
             where: {
-                userId,
-                postId,
+                followerId: userId,
+                followingId: id,
             },
         });
 
-        if (bookmark) {
-            await prisma.bookMark.delete({
+        if (follow) {
+            await prisma.follow.delete({
                 where: {
-                    id: bookmark.id,
+                    id: follow.id,
                 },
             });
             return NextResponse.json(
                 {
                     apiRequestInfo,
-                    data: { isSuccess: true, message: 'Đã bỏ lưu bài viết' },
+                    data: { isSuccess: true, message: 'Đã bỏ theo dõi' },
                 },
                 { status: 200 }
             );
         } else {
-            await prisma.bookMark.create({
+            await prisma.follow.create({
                 data: {
-                    userId: userId || '',
-                    postId,
+                    followerId: userId || '',
+                    followingId: id,
                 },
             });
             return NextResponse.json(
                 {
                     apiRequestInfo,
-                    data: { isSuccess: true, message: 'Đã lưu bài viết' },
+                    data: { isSuccess: true, message: 'Đã theo dõi' },
                 },
                 { status: 200 }
             );
         }
-    } catch (error) {
-        console.log(error);
+    } catch {
         return NextResponse.json(
             {
                 apiRequestInfo,
-                data: { error: 'Đã xảy ra lỗi khi lưu bài viết' },
+                data: { error: 'Đã xảy ra lỗi khi theo dõi' },
             },
             { status: 500 }
         );
     }
+};
+
+export const GET = async (
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) => {
+    const { id } = params;
+
+    apiRequestInfo.clientIp =
+        request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
+
+    const session = await auth();
+
+    const isFollowed = await prisma.follow.findFirst({
+        where: {
+            followerId: session?.user?.id,
+            followingId: id,
+        },
+    });
+
+    return NextResponse.json(
+        {
+            apiRequestInfo,
+            data: { isFollowed: isFollowed },
+        },
+        { status: 200 }
+    );
 };

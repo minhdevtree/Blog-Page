@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { ApiRequestInfo } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
-import { createRedisInstance } from '@/config/redis';
+import { getRedisInstance } from '@/config/redis';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -43,7 +43,7 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
         apiRequestInfo.clientIp =
             request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';
 
-        const redis = createRedisInstance();
+        const redis = getRedisInstance();
         const cachedPopularTags = await redis.get(`popular-tags:${limit}`);
 
         if (cachedPopularTags) {

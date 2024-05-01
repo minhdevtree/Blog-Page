@@ -1,10 +1,15 @@
+import ButtonFollowUser from '@/components/shared/button-follow-user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { AuthorPostDetail } from '@/lib/define';
-import { BookmarkIcon } from '@radix-ui/react-icons';
 import { SquarePen, UserRoundPlus } from 'lucide-react';
 
-export default function Author({ author }: { author: AuthorPostDetail }) {
+export default function Author({
+    author,
+    isFollowed,
+}: {
+    author: AuthorPostDetail;
+    isFollowed: boolean;
+}) {
     return (
         <div className="flex gap-2">
             <Avatar className="border-solid border-sky-500 border-2 w-[35px] h-[35px] md:w-[45px] md:h-[45px]">
@@ -16,13 +21,17 @@ export default function Author({ author }: { author: AuthorPostDetail }) {
             </Avatar>
             <div className="flex">
                 <div className="flex flex-col justify-between">
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                         <p className="text-base font-bold leading-none text-sky-500">
                             {author?.fullName}
                         </p>
-                        <p className="text-base leading-none text-muted-foreground max-md:hidden">
+                        <p className="text-base leading-none text-muted-foreground max-lg:hidden">
                             @{author?.username}
                         </p>
+                        <ButtonFollowUser
+                            isFollowed={isFollowed}
+                            userId={author.id}
+                        />
                     </div>
                     <div className="flex justify-start gap-3 text-base leading-none text-muted-foreground">
                         <div className="flex gap-1 items-center">
