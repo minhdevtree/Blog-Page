@@ -111,8 +111,6 @@ const Tiptap = ({
             Underline,
             Highlight,
             Typography,
-            Image,
-            Dropcursor,
             SmilieReplacer,
             ImageResize,
             CodeBlockLowlight.extend({
