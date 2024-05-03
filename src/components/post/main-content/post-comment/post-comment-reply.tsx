@@ -13,6 +13,7 @@ import {
 import { PostComment } from '@/lib/define';
 import CommentForm from './comment-form';
 import Link from 'next/link';
+import CommentText from '@/components/shared/comment-text';
 
 export default function PostCommentReply({
     comment,
@@ -31,13 +32,15 @@ export default function PostCommentReply({
                         Trả lời
                     </button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px]">
+                <DialogContent className="sm:max-w-[600px] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle className="text-sky-500">
+                        <DialogTitle className="text-sky-500 text-left">
                             Phản hồi {comment.user.fullName} (@
                             {comment.user.username}):
                         </DialogTitle>
-                        <DialogDescription>{comment.content}</DialogDescription>
+                        <div className="text-sm text-muted-foreground text-left">
+                            <CommentText comment={comment.content} />
+                        </div>
                     </DialogHeader>
                     {comment._count.children > 9 ? (
                         <Link

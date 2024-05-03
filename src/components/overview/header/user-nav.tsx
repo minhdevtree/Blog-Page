@@ -41,6 +41,19 @@ export function UserNav({ session }: { session: any }) {
                             </p>
                         </div>
                     </DropdownMenuLabel>
+                    {session.user.role === 'WRITER' && (
+                        <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem
+                                    asChild
+                                    className="cursor-pointer"
+                                >
+                                    <Link href={'/create-post'}>Viết bài</Link>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
                         <DropdownMenuItem asChild className="cursor-pointer">

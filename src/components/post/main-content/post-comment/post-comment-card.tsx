@@ -27,7 +27,7 @@ export default async function PostCommentCard({
     const isLiked = await isLikedComment(comment.id);
 
     return (
-        <>
+        <div>
             <div className="flex items-start gap-2 md:gap-5 my-5">
                 <Avatar className="border-solid border-sky-500 border-2 w-[35px] h-[35px] md:w-[45px] md:h-[45px]">
                     <AvatarImage
@@ -36,7 +36,7 @@ export default async function PostCommentCard({
                     />
                     <AvatarFallback>A</AvatarFallback>
                 </Avatar>
-                <Card className="p-4 pb-2 w-full relative">
+                <Card className="p-4 pb-2 relative max-w-[90%]">
                     {comment._count.likes > 0 && (
                         <div className="absolute bottom-[-10px] right-[-10px]">
                             <Badge className="bg-sky-500 text-white flex gap-1 items-center">
@@ -94,6 +94,6 @@ export default async function PostCommentCard({
                     session={session}
                 />
             )}
-        </>
+        </div>
     );
 }

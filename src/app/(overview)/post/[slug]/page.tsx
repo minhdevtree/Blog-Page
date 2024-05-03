@@ -81,7 +81,7 @@ export default async function PostPage({
     const isFollowed = await isFollowedUser(post.author.id);
 
     return (
-        <Card className="w-full px-5 py-10">
+        <Card className="px-5 py-10">
             <div className="grid grid-cols-4 max-lg:grid-cols-3 gap-5">
                 <div className="col-span-3">
                     <BreadcrumbComponent breadcrumbs={breadItems} />

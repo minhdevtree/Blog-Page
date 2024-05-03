@@ -8,8 +8,12 @@ export const loginFormSchema = z.object({
 export const postCommentSchema = z.object({
     content: z
         .string()
-        .min(1, { message: 'Nội dung bình luận không được để trống' })
-        .max(500, { message: 'Nội dung bình luận tối đa 500 kí tự' }),
+        .refine(val => val.replace(/<[^>]+>/g, '').trim().length >= 1, {
+            message: 'Nội dung bình luận không được để trống',
+        })
+        .refine(val => val.replace(/<[^>]+>/g, '').trim().length <= 1000, {
+            message: 'Nội dung bình luận tối đa 1000 kí tự',
+        }),
 });
 
 export const sendEmailSchema = z.object({

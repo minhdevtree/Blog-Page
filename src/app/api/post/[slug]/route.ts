@@ -46,7 +46,7 @@ export const GET = async (
         });
 
         if (count?.published === PublishedType.PUBLISHED_SUBSCRIBERS) {
-            // Check ì user has followed author or not
+            // Check if user has followed author or not
             const session = await auth();
             const isFollowed = await prisma.follow.findFirst({
                 where: {
@@ -71,6 +71,7 @@ export const GET = async (
             if (count) {
                 const postDetail = JSON.parse(cachedPostDetail);
                 postDetail._count = count._count;
+                postDetail.published = count.published;
                 return NextResponse.json({
                     apiRequestInfo,
                     data: postDetail,

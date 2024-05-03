@@ -2,7 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { postCommentSchema } from '@/lib/form-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -20,6 +19,8 @@ import { useRouter } from 'next/navigation';
 import { handleCommentPost } from '@/lib/action';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import Tiptap from '@/components/shared/tip-tap';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function CommentForm({
     session,
@@ -82,12 +83,17 @@ export default function CommentForm({
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Textarea
+                                                {/* <Textarea
                                                     id="content"
                                                     placeholder="Viết bình luận..."
                                                     disabled={isLoading}
                                                     {...field}
                                                     className="focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-sky-500 focus-visible:ring-offset-1"
+                                                /> */}
+                                                <Tiptap
+                                                    description={field.value}
+                                                    onChange={field.onChange}
+                                                    className="min-h-[100px]"
                                                 />
                                             </FormControl>
                                             <FormMessage />

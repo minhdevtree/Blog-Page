@@ -1,5 +1,6 @@
 import { ChildPostDetail } from '@/lib/define';
 import PostMeta from './post-meta';
+import parse from 'html-react-parser';
 
 export default function ChildPost({ post }: { post: ChildPostDetail }) {
     return (
@@ -10,10 +11,7 @@ export default function ChildPost({ post }: { post: ChildPostDetail }) {
             >
                 {`${post?.order}. ${post?.title}`}
             </h1>
-            <div
-                className="mt-2"
-                dangerouslySetInnerHTML={{ __html: post?.content }}
-            ></div>
+            <div className="mt-2">{parse(post?.content)}</div>
             {post?.metas.map((meta, index) => (
                 <PostMeta meta={meta} key={index} />
             ))}
