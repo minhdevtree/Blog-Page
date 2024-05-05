@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import { authConfig } from './lib/auth.config';
 import { auth } from './lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
+import { CustomSession } from './lib/define';
 
 // export default NextAuth(authConfig).auth;
 
@@ -27,12 +28,23 @@ const urlRequireAuthenticated = [
     '/edit-profile/*',
     '/profile',
     '/profile/*',
+    '/create-post',
+    '/create-post/*',
 ];
+
+const urlRequireWritePermission = ['/create-post', '/create-post/*'];
 
 const urlPostDetail = ['/post/*'];
 
 function isUrlPostDetail(route: string) {
     return urlPostDetail.some(pattern => {
+        const regex = new RegExp('^' + pattern.split('*').join('.*') + '$');
+        return regex.test(route);
+    });
+}
+
+function routeRequiresWritePermission(route: string) {
+    return urlRequireWritePermission.some(pattern => {
         const regex = new RegExp('^' + pattern.split('*').join('.*') + '$');
         return regex.test(route);
     });
@@ -60,7 +72,7 @@ function routeRequiresAuthenticated(route: string) {
 }
 
 export async function middleware(req: NextRequest) {
-    const session = await auth();
+    const session = (await auth()) as CustomSession;
     const { pathname, searchParams } = req.nextUrl;
     const callbackUrl = searchParams.get('callbackUrl') || '/';
 
@@ -79,6 +91,13 @@ export async function middleware(req: NextRequest) {
     // ONLY AUTHENTICATED USERS CAN ACCESS CERTAIN ROUTES
     if (routeRequiresUnauthenticated(pathname) && session?.user) {
         return Response.redirect(new URL(callbackUrl, req.nextUrl));
+    }
+
+    // ONLY WRITERS CAN ACCESS CERTAIN ROUTES
+    if (routeRequiresWritePermission(pathname)) {
+        if (session?.user?.role !== 'WRITER') {
+            return Response.redirect(new URL(callbackUrl, req.nextUrl));
+        }
     }
 
     // ONLY AUTHENTICATED USERS CAN ACCESS CERTAIN API ROUTES

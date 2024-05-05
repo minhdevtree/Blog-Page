@@ -192,6 +192,26 @@ export type UserLoginProfile = {
     ];
 };
 
+export type createSubPost = {
+    title: string;
+    content: string;
+    image?: any;
+};
+
+export type CustomSession = {
+    user: {
+        id: string;
+        fullName: string;
+        username: string;
+        email: string;
+        img: string;
+        role: string;
+        loginType: string;
+    };
+    expires: string;
+    accessToken: string;
+};
+
 export enum RoleType {
     ADMIN,
     USER,

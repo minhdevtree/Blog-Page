@@ -2,8 +2,6 @@ import LogoSite from '@/components/overview/logo-site';
 import { MainNav } from './main-nav';
 import { UserNav } from './user-nav';
 import { SideBarMobile } from './side-bar-mobile/side-bar-mobile';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { ModeToggle } from './mode-toggle';
 import CategoryList from './category-list';

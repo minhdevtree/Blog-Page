@@ -1,3 +1,4 @@
+import { PublishedType } from '@prisma/client';
 import { z } from 'zod';
 
 export const loginFormSchema = z.object({
@@ -14,6 +15,68 @@ export const postCommentSchema = z.object({
         .refine(val => val.replace(/<[^>]+>/g, '').trim().length <= 1000, {
             message: 'Nội dung bình luận tối đa 1000 kí tự',
         }),
+});
+
+export const createPostSchema = z.object({
+    title: z
+        .string()
+        .min(1, { message: 'Tiêu đề không được để trống' })
+        .max(100, { message: 'Tiêu đề tối đa 100 kí tự' }),
+    image: z.any(),
+    summary: z
+        .string()
+        .max(200, { message: 'Tóm tắt tối đa 500 kí tự' })
+        .optional(),
+    content: z
+        .string()
+        .refine(val => val.replace(/<[^>]+>/g, '').trim().length >= 1, {
+            message: 'Nội dung bài viết không được để trống',
+        })
+        .refine(val => val.replace(/<[^>]+>/g, '').trim().length <= 10000, {
+            message: 'Nội dung bài viết tối đa 10000 kí tự',
+        }),
+    tags: z
+        .array(
+            z
+                .string()
+                .min(1, { message: 'Tag không được để trống' })
+                .max(20, { message: 'Tag tối đa 20 kí tự' })
+        )
+        .max(5, { message: 'Số lượng tag không được vượt quá 5' })
+        .refine(items => new Set(items).size === items.length, {
+            message: 'Tag không được trùng nhau',
+        }),
+    categories: z
+        .array(z.string().min(1, { message: 'Danh mục không được để trống' }))
+        .max(3, { message: 'Số lượng danh mục không được vượt quá 3' }),
+    published: z.nativeEnum(PublishedType),
+    subPosts: z
+        .array(
+            z.object({
+                title: z
+                    .string()
+                    .min(1, { message: 'Tiêu đề không được để trống' })
+                    .max(100, { message: 'Tiêu đề tối đa 100 kí tự' }),
+                content: z
+                    .string()
+                    .refine(
+                        val => val.replace(/<[^>]+>/g, '').trim().length >= 1,
+                        {
+                            message: 'Nội dung bài viết không được để trống',
+                        }
+                    )
+                    .refine(
+                        val =>
+                            val.replace(/<[^>]+>/g, '').trim().length <= 10000,
+                        {
+                            message: 'Nội dung bài viết tối đa 10000 kí tự',
+                        }
+                    ),
+                image: z.any().optional(),
+            })
+        )
+        .max(20, { message: 'Số lượng không được vượt quá 20' })
+        .optional(),
 });
 
 export const sendEmailSchema = z.object({

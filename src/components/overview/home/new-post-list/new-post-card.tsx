@@ -1,26 +1,18 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BookmarkIcon, Earth, Globe, UserRoundCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
+
 import { Post } from '@/lib/define';
-import { getDateFormatted, getFormatDistanceToNow } from '@/lib/utils';
-import { KeyType, PublishedType } from '@prisma/client';
+import { KeyType } from '@prisma/client';
 import DistanceToNowToolTip from '@/components/shared/distance-to-now-tooltip';
 import CategoryBadge from '@/components/shared/category-badge';
 import TagBadge from '@/components/shared/tag-badge';
 import PublishedBadge from '@/components/shared/published-badge';
 import { BasicTooltip } from '@/components/shared/tool-tip';
 import Link from 'next/link';
+import parse from 'html-react-parser';
 
 export function NewPostCard({ post }: { post: Post }) {
     return (

@@ -83,18 +83,18 @@ export default function CommentForm({
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                {/* <Textarea
+                                                <Textarea
                                                     id="content"
                                                     placeholder="Viết bình luận..."
                                                     disabled={isLoading}
                                                     {...field}
                                                     className="focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-sky-500 focus-visible:ring-offset-1"
-                                                /> */}
-                                                <Tiptap
+                                                />
+                                                {/* <Tiptap
                                                     description={field.value}
                                                     onChange={field.onChange}
                                                     className="min-h-[100px]"
-                                                />
+                                                /> */}
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

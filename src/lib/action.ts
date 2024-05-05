@@ -371,3 +371,19 @@ export async function updateProfile(formData: any) {
             return { isSuccess: false, error: error.response.data.data.error };
         });
 }
+
+export async function createPost(formData: any) {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    return await axios
+        .post('/post/create', formData, {
+            headers: {
+                Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+            },
+        })
+        .then(res => {
+            return { isSuccess: true, data: res.data.data, error: '' };
+        })
+        .catch(error => {
+            return { isSuccess: false, error: error.response.data.data.error };
+        });
+}

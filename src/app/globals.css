@@ -98,6 +98,7 @@ pre {
     color: #fff;
     font-family: 'JetBrainsMono', monospace;
     padding: 0.75rem 1rem;
+    overflow-x: auto;
 
     code {
         background: none;
@@ -210,13 +211,13 @@ li.ProseMirror-selectednode:after {
     pointer-events: none;
 }
 
-.tiptap {
+.tiptap,
+.post-detail {
     table {
         border-collapse: collapse;
         table-layout: fixed;
         width: 100%;
         margin: 0;
-        overflow: hidden;
 
         td,
         th {
@@ -271,14 +272,23 @@ li.ProseMirror-selectednode:after {
     cursor: col-resize;
 }
 
-.tiptap {
+.tiptap,
+.parent-post,
+.child-post {
     > * + * {
         margin-top: 0.75em;
     }
 
     img {
-        max-width: 100%;
+        /* max-width: 100%; */
+        /* center image */
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
         height: auto;
+        margin-top: 0.75em;
+        margin-bottom: 0.75em;
+        border-radius: 0.5rem;
 
         &.ProseMirror-selectednode {
             outline: 3px solid #68cef8;

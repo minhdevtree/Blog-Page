@@ -124,6 +124,12 @@ export default function HowToUse() {
                             tính của bạn. Thật ra có hỗ trợ nhưng được khóa do
                             kho lưu trữ có giới hạn)
                         </div>
+                        <div>
+                            Với người viết bài, bạn có đặc quyền được tải hình
+                            ảnh từ máy tính của mình cho mục đích viết bài. Bạn
+                            cũng có thể sử dụng URL hình ảnh từ các trang web
+                            khác.
+                        </div>
                         <br />
                         <div className="text-xl font-bold flex items-center gap-2">
                             Phím tắt Markdown giúp bạn dễ dàng định dạng văn bản
