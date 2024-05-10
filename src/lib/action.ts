@@ -317,9 +317,12 @@ export async function resetPassword(token: string, password: string) {
         });
 }
 
-export async function uploadImage(formData: FormData) {
+export async function uploadImage(formData: FormData, path?: string) {
+    if (!path) {
+        path = 'users/avatars/';
+    }
     return await axios
-        .post('/image/upload', formData, {
+        .post(`/image/upload?path=${path}`, formData, {
             headers: {
                 'Content-Type': 'image/*',
             },
@@ -384,6 +387,11 @@ export async function createPost(formData: any) {
             return { isSuccess: true, data: res.data.data, error: '' };
         })
         .catch(error => {
-            return { isSuccess: false, error: error.response.data.data.error };
+            return {
+                isSuccess: false,
+                error:
+                    error.response.data.data.error ||
+                    'Đã xảy ra lỗi khi tạo bài viết',
+            };
         });
 }

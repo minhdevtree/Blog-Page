@@ -12,7 +12,6 @@ import TagBadge from '@/components/shared/tag-badge';
 import PublishedBadge from '@/components/shared/published-badge';
 import { BasicTooltip } from '@/components/shared/tool-tip';
 import Link from 'next/link';
-import parse from 'html-react-parser';
 
 export function NewPostCard({ post }: { post: Post }) {
     return (

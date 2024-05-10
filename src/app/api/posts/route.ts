@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { ApiRequestInfo, PageMeta } from '@/lib/define';
 import { getDateFormatted } from '@/lib/utils';
 import { getRedisInstance } from '@/config/redis';
+import { PublishedType } from '@prisma/client';
 
 const currentTime = getDateFormatted(new Date().toISOString());
 const apiRequestInfo = {
@@ -143,7 +144,13 @@ export const GET = async (request: NextRequest, response: NextResponse) => {
             // Get all posts from database
             const posts = await prisma.post.findMany({
                 skip,
-                where: { parentId: null },
+                where: {
+                    parentId: null,
+                    OR: [
+                        { published: PublishedType.PUBLISHED_ALL },
+                        { published: PublishedType.PUBLISHED_SUBSCRIBERS },
+                    ],
+                },
                 orderBy: { publishedAt: sort === 'asc' ? 'asc' : 'desc' },
                 take: pageMeta.pageSize,
                 select: {

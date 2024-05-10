@@ -13,7 +13,7 @@ const apiRequestInfo = {
     clientIp: 'Unknown',
 } as ApiRequestInfo;
 
-export const GET = async (request: NextRequest) => {
+export const GET = async (request: NextRequest, response: NextResponse) => {
     const session = await auth();
     apiRequestInfo.clientIp =
         request.ip || request.headers.get('X-Forwarded-For') || 'Unknown';

@@ -25,7 +25,7 @@ export const createPostSchema = z.object({
     image: z.any(),
     summary: z
         .string()
-        .max(200, { message: 'Tóm tắt tối đa 500 kí tự' })
+        .max(700, { message: 'Tóm tắt tối đa 700 kí tự' })
         .optional(),
     content: z
         .string()

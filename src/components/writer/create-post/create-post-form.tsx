@@ -169,7 +169,7 @@ export default function CreatePostForm({
             if (imageValue !== null) {
                 const formImage = new FormData();
                 formImage.set('image', imageValue);
-                const result = await uploadImage(formImage);
+                const result = await uploadImage(formImage, 'post/');
                 if (result.isSuccess) {
                     data.image = result.data;
                 } else {
@@ -184,7 +184,7 @@ export default function CreatePostForm({
                 if (imageValue !== null) {
                     const formImage = new FormData();
                     formImage.set('image', imageValue);
-                    const result = await uploadImage(formImage);
+                    const result = await uploadImage(formImage, 'post/');
                     if (result.isSuccess) {
                         if (data?.subPosts?.[i]?.image) {
                             data.subPosts[i].image = result.data;
@@ -212,14 +212,14 @@ export default function CreatePostForm({
                 setIsSetImage(true);
             }
             const result = await createPost(data);
+            console.log(result);
             if (result.isSuccess) {
                 toast.success('Tạo bài viết thành công!');
                 route.push('/');
+                route.refresh();
             } else {
-                toast.error(result.error);
+                toast.error(result?.error);
             }
-
-            console.log(data);
         }
         setIsLoading(false);
     };
@@ -461,7 +461,7 @@ export default function CreatePostForm({
                                     />
                                 </FormControl>
                             </FormControl>
-                            <FormDescription>Tối đa 500 kí tự</FormDescription>
+                            <FormDescription>Tối đa 700 kí tự</FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

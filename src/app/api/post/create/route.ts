@@ -44,17 +44,6 @@ export const POST = async (request: NextRequest) => {
         );
     }
 
-    // defaultValues: {
-    //     title: '',
-    //     summary: '',
-    //     content: '',
-    //     image: '',
-    //     tags: [],
-    //     categories: [],
-    //     published: PublishedType.DRAFT,
-    //     subPosts: [] as createSubPost[],
-    // },
-
     try {
         const body = await request.json();
         const {
@@ -77,7 +66,7 @@ export const POST = async (request: NextRequest) => {
                     replacement: '-', // replace spaces with replacement character, defaults to `-`
                     remove: undefined, // remove characters that match regex, defaults to `undefined`
                     lower: true, // convert to lower case, defaults to `false`
-                    strict: false, // strip special characters except replacement, defaults to `false`
+                    strict: true, // strip special characters except replacement, defaults to `false`
                     locale: 'vi', // language code of the locale to use
                     trim: true, // trim leading and trailing replacement chars, defaults to `true`
                 });
@@ -98,7 +87,7 @@ export const POST = async (request: NextRequest) => {
             replacement: '-', // replace spaces with replacement character, defaults to `-`
             remove: undefined, // remove characters that match regex, defaults to `undefined`
             lower: true, // convert to lower case, defaults to `false`
-            strict: false, // strip special characters except replacement, defaults to `false`
+            strict: true, // strip special characters except replacement, defaults to `false`
             locale: 'vi', // language code of the locale to use
             trim: true, // trim leading and trailing replacement chars, defaults to `true`
         });
@@ -204,9 +193,9 @@ export const POST = async (request: NextRequest) => {
                     post: post,
                 },
             },
-            { status: 500 }
+            { status: 201 }
         );
-    } catch {
+    } catch (error) {
         return NextResponse.json(
             {
                 apiRequestInfo,

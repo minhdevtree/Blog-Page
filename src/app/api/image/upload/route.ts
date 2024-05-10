@@ -20,6 +20,12 @@ export async function POST(req: NextRequest) {
         req.ip || req.headers.get('X-Forwarded-For') || 'Unknown';
 
     try {
+        let path = req.nextUrl.searchParams.get('path');
+
+        if (!path) {
+            path = 'users/avatars/';
+        }
+
         const body = await req.formData();
         const image: File | null = body.get('image') as unknown as File;
 
@@ -47,7 +53,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const imgRef = ref(storage, `users/avatars/${v4()}`);
+        const imgRef = ref(storage, `${path}${v4()}`);
         await uploadBytes(imgRef, image);
         const imgUrl = await getDownloadURL(imgRef);
 
