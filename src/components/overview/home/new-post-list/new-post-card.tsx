@@ -69,7 +69,7 @@ export function NewPostCard({ post }: { post: Post }) {
                                 <div className="text-sm text-muted-foreground line-clamp-3 md:line-clamp-6 md:max-w-[500px]">
                                     {post.summary}
                                     <br />
-                                    {post.content}
+                                    {/* {post.content} */}
                                 </div>
                             </Link>
                         </div>

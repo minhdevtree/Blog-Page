@@ -48,12 +48,16 @@ export const GET = async (
         if (count?.published === PublishedType.PUBLISHED_SUBSCRIBERS) {
             // Check if user has followed author or not
             const session = await auth();
-            const isFollowed = await prisma.follow.findFirst({
-                where: {
-                    followerId: session?.user?.id,
-                    followingId: count?.authorId || '',
-                },
-            });
+            let isFollowed = false;
+            if (session?.user) {
+                const followResult = await prisma.follow.findFirst({
+                    where: {
+                        followerId: session?.user?.id,
+                        followingId: count?.authorId || '',
+                    },
+                });
+                isFollowed = followResult !== null;
+            }
 
             if (!isFollowed) {
                 return NextResponse.json(

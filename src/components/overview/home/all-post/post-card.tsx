@@ -1,15 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
+// import parse from 'html-react-parser';
 import { Post } from '@/lib/define';
 import { KeyType } from '@prisma/client';
 import DistanceToNowToolTip from '@/components/shared/distance-to-now-tooltip';
@@ -76,7 +70,7 @@ export function PostCard({ post }: { post: Post }) {
                                 <div className="text-sm text-muted-foreground line-clamp-3 ">
                                     {post.summary}
                                     <br />
-                                    {post.content}
+                                    {/* {parse(post.content)} */}
                                 </div>
                             </Link>
                         </div>

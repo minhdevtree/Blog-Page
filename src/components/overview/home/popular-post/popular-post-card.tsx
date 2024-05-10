@@ -59,7 +59,7 @@ export function PopularPostCard({ post }: { post: Post }) {
                                 <div className="text-sm text-muted-foreground line-clamp-2 ">
                                     {post.summary}
                                     <br />
-                                    {post.content}
+                                    {/* {post.content} */}
                                 </div>
                             </div>
                         </Link>
