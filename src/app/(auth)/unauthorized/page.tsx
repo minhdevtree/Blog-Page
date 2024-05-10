@@ -13,6 +13,8 @@ export default function UnauthorizedPage({
                 return 'Tài khoản của bạn đã bị cấm truy cập.';
             case 'account_deleted':
                 return 'Tài khoản của bạn đã bị xóa.';
+            case 'invalid_login_type':
+                return 'Tài khoản của bạn không hợp lệ hoặc đã được đăng ký bằng một phương thức khác.';
             default:
                 return 'Nếu bạn nghĩ đây là một lỗi, vui lòng liên hệ với admin.';
         }

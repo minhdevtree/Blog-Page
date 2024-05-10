@@ -166,6 +166,8 @@ export const {
                         user = { ...user, ...newUser };
                     } else if (googleUser.status === StatusType.BANNED) {
                         return '/unauthorized?error=account_banned';
+                    } else if (googleUser.loginType !== LoginType.GOOGLE) {
+                        return '/unauthorized?error=invalid_login_type';
                     } else {
                         user = { ...googleUser };
                     }
