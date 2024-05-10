@@ -124,6 +124,8 @@ export const {
                         user = { ...user, ...newUser };
                     } else if (githubUser.status === StatusType.BANNED) {
                         return '/unauthorized';
+                    } else if (githubUser.loginType !== LoginType.GITHUB) {
+                        return '/unauthorized?error=invalid_login_type';
                     } else {
                         user = { ...user, ...githubUser };
                     }
