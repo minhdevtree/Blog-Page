@@ -1,17 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Post } from '@/lib/define';
 import DistanceToNowToolTip from '@/components/shared/distance-to-now-tooltip';
 import CategoryBadge from '@/components/shared/category-badge';
-import TagBadge from '@/components/shared/tag-badge';
-import PublishedBadge from '@/components/shared/published-badge';
 import { BasicTooltip } from '@/components/shared/tool-tip';
 import Link from 'next/link';
 

@@ -143,8 +143,13 @@ export const getTopCreators = async () => {
 };
 
 export const getPostDetail = async (slug: string) => {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
     return await axios
-        .get(`/post/${slug}`)
+        .get(`/post/${slug}`, {
+            headers: {
+                Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+            },
+        })
         .then(res => res.data.data as PostDetail)
         .catch(error => {
             return error.response.data;

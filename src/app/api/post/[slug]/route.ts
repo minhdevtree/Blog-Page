@@ -49,7 +49,7 @@ export const GET = async (
             // Check if user has followed author or not
             const session = await auth();
             let isFollowed = false;
-            if (session?.user) {
+            if (session) {
                 const followResult = await prisma.follow.findFirst({
                     where: {
                         followerId: session?.user?.id,

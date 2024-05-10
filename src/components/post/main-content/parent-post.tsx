@@ -22,7 +22,7 @@ export default function ParentPost({ post }: { post: PostDetail }) {
     }, [post?.id]);
     return (
         <div className="mt-10 parent-post">
-            <h1 className="text-3xl font-bold leading-none text-sky-500 my-5">
+            <h1 className="text-3xl font-bold text-sky-500 my-5">
                 {post.title}
             </h1>
             <p className="text-lg text-muted-foreground mt-3">{post.summary}</p>
