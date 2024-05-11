@@ -93,6 +93,7 @@
         "tailwind-merge": "^2.2.2",
         "tailwindcss-animate": "^1.0.7",
         "tiptap-extension-resize-image": "^1.0.4",
+        "use-debounce": "^10.0.0",
         "uuid": "^9.0.1",
         "vaul": "^0.9.0",
         "vercel": "^33.6.2",

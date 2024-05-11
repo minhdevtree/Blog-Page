@@ -1,5 +1,3 @@
-import NextAuth from 'next-auth';
-import { authConfig } from './lib/auth.config';
 import { auth } from './lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { CustomSession } from './lib/define';
@@ -19,6 +17,7 @@ const apiRequireSession = [
     '/api/user/profile',
     '/api/post/*/bookmark',
     '/api/user/*/follow',
+    '/api/posts/my-posts',
 ];
 
 const urlRequireUnauthenticated = ['/login', '/register', '/activate'];
@@ -32,7 +31,12 @@ const urlRequireAuthenticated = [
     '/create-post/*',
 ];
 
-const urlRequireWritePermission = ['/create-post', '/create-post/*'];
+const urlRequireWritePermission = [
+    '/create-post',
+    '/create-post/*',
+    '/my-posts',
+    '/my-posts/*',
+];
 
 const urlPostDetail = ['/post/*'];
 

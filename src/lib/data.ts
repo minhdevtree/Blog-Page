@@ -45,11 +45,36 @@ export const getPosts = async (searchParams: SearchPostParams) => {
 export const getPopularPosts = async () => {
     try {
         return await axios
-            .get(`/posts/popular-posts`)
+            .get(`/posts/popular-posts?limit=5`)
             .then(res => res.data.data as Post[]);
     } catch (error) {
         console.error(error);
         return [] as Post[];
+    }
+};
+
+export const getPostsByAuthor = async (searchParams: SearchPostParams) => {
+    const sessionTokenAuthJs = await getCookie('authjs.session-token');
+    try {
+        const { posts, pageMeta } = await axios
+            .get(`/posts/my-posts`, {
+                headers: {
+                    Cookie: `authjs.session-token=${sessionTokenAuthJs}`,
+                },
+                params: searchParams,
+            })
+            .then(res => {
+                return {
+                    posts: res.data.data.posts as Post[],
+                    pageMeta: res.data.data.pageMeta as PageMeta,
+                };
+            });
+        return { posts, pageMeta };
+    } catch (error) {
+        return {
+            posts: [] as Post[],
+            pageMeta: pageMetaDefault as PageMeta,
+        };
     }
 };
 

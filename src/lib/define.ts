@@ -5,6 +5,7 @@ export type Post = {
     content: string;
     publishedAt: string;
     published: string;
+    createdAt?: string;
     slug: string;
     author: {
         id: string;
@@ -153,6 +154,7 @@ export type SearchPostParams = {
     sort?: string;
     page?: number;
     pageSize?: number;
+    published?: string;
 };
 
 export type SearchCommentParams = {
@@ -174,6 +176,25 @@ export type PostComment = {
         username: string;
         img: string;
     };
+};
+
+export enum SearchParams {
+    SORT = 'sort',
+    PAGE = 'page',
+    PER_PAGE = 'perPage',
+    MODE = 'mode',
+}
+
+export type SortOption = {
+    label: string;
+    value: string;
+    field: string;
+};
+
+export type FilterOption = {
+    label: string;
+    value: string;
+    field: string;
 };
 
 export type UserLoginProfile = {

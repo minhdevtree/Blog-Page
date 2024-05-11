@@ -49,7 +49,9 @@ export function UserNav({ session }: { session: any }) {
                                     asChild
                                     className="cursor-pointer"
                                 >
-                                    <Link href={'/create-post'}>Viết bài</Link>
+                                    <Link href={'/my-posts'}>
+                                        Bài viết của tôi
+                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                         </>
